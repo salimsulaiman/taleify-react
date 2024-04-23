@@ -1,5 +1,7 @@
 const express = require("express");
 const UserLiteration = require("../models/UserLiteration");
+const Genre = require("../models/Genre");
+const { populate } = require("dotenv");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -34,6 +36,34 @@ router.get("/literation_added/:userId/:literationId", async (req, res) => {
       .populate({
         path: "literation",
         select: "_id title",
+      });
+    if (data.length == 0) {
+      res.status(200).json(null);
+    } else {
+      res.status(200).json(data);
+    }
+  } catch (error) {
+    res.status(400).json({
+      status: res.statusCode,
+      message: "Error",
+    });
+  }
+});
+
+router.get("/literation_added/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const data = await UserLiteration.find({ user: userId, status: 1})
+      .populate({
+        path: "user",
+        select: "_id name",
+      })
+      .populate({
+        path: "literation",
+        populate: {
+          path: "genre",
+          select: "_id name"
+        }
       });
     if (data.length == 0) {
       res.status(200).json(null);
@@ -95,4 +125,6 @@ router.put("/literation_added/:id", async (req, res) => {
     });
   }
 });
+
+
 module.exports = router;

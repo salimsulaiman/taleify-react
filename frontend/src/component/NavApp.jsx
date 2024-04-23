@@ -42,7 +42,7 @@ const NavApp = () => {
               </Link>
             </li>
             <li className="ms-7">
-              <Link to={"/"} className="text-slate-700">
+              <Link to={"/user/literations/user_literation"} className="text-slate-700">
                 <BiSolidBookAlt className="text-xl" />
               </Link>
             </li>
