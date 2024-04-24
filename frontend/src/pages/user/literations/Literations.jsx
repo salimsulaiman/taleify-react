@@ -7,7 +7,11 @@ import LiterationList from "../../../component/LiterationList";
 import { useDispatch, useSelector } from "react-redux";
 import { getLiteration, getLiterationById } from "../../../redux/action/literationAction";
 import ImageLoad from "../../../assets/image/imageload.png";
-import { getLiterationAddedById } from "../../../redux/action/literationAddedAction";
+import {
+  addUserLiteration,
+  deleteUserLiteration,
+  getLiterationAddedById,
+} from "../../../redux/action/literationAddedAction";
 import { userData } from "../../../redux/action/userAction";
 
 function Literations() {
@@ -28,8 +32,6 @@ function Literations() {
   const expanded = () => {
     setIsExpanded(!isExpanded);
   };
-
-  const addLiteration = () => {};
 
   useEffect(() => {
     dispatch(getLiteration());
@@ -59,7 +61,26 @@ function Literations() {
   const openLiteration = () => {
     navigate(`/user/literations/detail/${id}`);
   };
-  const deleteLiteration = () => {};
+
+  const addLiteration = () => {
+    const userId = localStorage.getItem("userId");
+    if (userId && dataDetail?._id) {
+      dispatch(addUserLiteration(userId, dataDetail?._id)).then(() => {
+        dispatch(userData());
+      });
+      dispatch(getLiterationById(id));
+      dispatch(getLiteration());
+    }
+  };
+
+  const deleteLiteration = () => {
+    alert("Berhasil dihapus");
+    const idLiterationAdded = literationAdded[0]?._id;
+    dispatch(deleteUserLiteration(idLiterationAdded));
+    dispatch(userData());
+    dispatch(getLiterationById(id));
+    dispatch(getLiteration());
+  };
 
   return (
     <main className="w-full min-h-screen bg-white font-poppins">
@@ -120,7 +141,10 @@ function Literations() {
                 )}
 
                 <div className="flex static lg:absolute -top-10">
-                  {!isLoadingLiteration && literationAdded && literationAdded != null ? (
+                  {!isLoadingLiteration &&
+                  literationAdded &&
+                  literationAdded != null &&
+                  literationAdded[0]?.status == 1 ? (
                     <div className="flex w-full">
                       <button
                         className="bg-gradient-to-r from-purple-light to-purple-semi-dark text-white px-4 py-2 rounded-md cursor-pointer text-sm md:text-base me-4 flex-grow sm:flex-grow-0"

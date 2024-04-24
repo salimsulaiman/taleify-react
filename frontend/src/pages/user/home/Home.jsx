@@ -79,40 +79,26 @@ function Home() {
               pagination={{
                 clickable: true,
               }}
-              loop
               modules={[FreeMode, Pagination]}
               className="w-full"
             >
-              <SwiperSlide>
-                <CardLiteration
-                  deskripsi={
-                    "Seorang Superhero yang memiliki kekuatan untuk membentuk jembatan antara berbagai kelompok atau bangsa di dunia, bertujuan untuk menciptakan kesatuan dan perdamaian"
-                  }
-                  title={"Bridges of Unity: Guardian of One World"}
-                  genre={"Fiksi"}
-                  image={Fantasy}
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CardLiteration
-                  deskripsi={
-                    "Petualangan seorang tokoh utama yang tanpa sengaja terperangkap di dalam labirin gelap yang misterius"
-                  }
-                  title={"Bisikan Kegelapan: Terjebak Dalam Labirin Gelap"}
-                  genre={"Horror"}
-                  image={Fantasy}
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CardLiteration
-                  deskripsi={
-                    "Menurut legenda, kekuatan luar biasa yang dimiliki oleh Atlantis menciptakan kemarahan dewa, dan sebagai akibatnya, kota tersebut tenggelam ke dalam lautan dengan segala kejayaannya"
-                  }
-                  title={"Atlantis Kota Yang Hilang"}
-                  genre={"Fiksi"}
-                  image={Fantasy}
-                />
-              </SwiperSlide>
+              {isLoading ? (
+                <div></div>
+              ) : (
+                data &&
+                data.map((element) => {
+                  return (
+                    <SwiperSlide key={element._id}>
+                      <CardLiteration
+                        deskripsi={element.desc}
+                        title={element.title}
+                        genre={element.genre.name}
+                        image={element.picture}
+                      />
+                    </SwiperSlide>
+                  );
+                })
+              )}
             </Swiper>
             <div className="hidden md:block absolute blur-side-right right-0 top-0 bottom-0 w-20 z-10"></div>
           </div>

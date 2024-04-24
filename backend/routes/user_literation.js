@@ -53,7 +53,7 @@ router.get("/literation_added/:userId/:literationId", async (req, res) => {
 router.get("/literation_added/:userId", async (req, res) => {
   const userId = req.params.userId;
   try {
-    const data = await UserLiteration.find({ user: userId, status: 1})
+    const data = await UserLiteration.find({ user: userId, status: 1 })
       .populate({
         path: "user",
         select: "_id name",
@@ -62,8 +62,8 @@ router.get("/literation_added/:userId", async (req, res) => {
         path: "literation",
         populate: {
           path: "genre",
-          select: "_id name"
-        }
+          select: "_id name",
+        },
       });
     if (data.length == 0) {
       res.status(200).json(null);
@@ -78,7 +78,7 @@ router.get("/literation_added/:userId", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/literation_added", async (req, res) => {
   const { user, literation } = req.body;
   const userLiteration = new UserLiteration({
     user,
@@ -125,6 +125,5 @@ router.put("/literation_added/:id", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

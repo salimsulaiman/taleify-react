@@ -4,6 +4,7 @@ export const FETCH_DATA = "FETCH_DATA";
 export const GET_USER_LITERATION = "GET_USER_LITERATION";
 export const GET_USER_LITERATION_BY_USER_LITERATION = "GET_USER_LITERATION_BY_USER_LITERATION";
 export const GET_LITERATION_BY_USER_ID = "GET_LITERATION_BY_USER_ID";
+export const ADD_USER_LITERATION = "ADD_USER_LITERATION";
 
 export function fetchData() {
   return {
@@ -11,18 +12,18 @@ export function fetchData() {
   };
 }
 
-export function successGetLiterationAdded(data){
-  return{
+export function successGetLiterationAdded(data) {
+  return {
     type: GET_USER_LITERATION,
     payload: data,
-  }
+  };
 }
 
 export function successGetDataLiterationAddedByUser(data) {
   return {
     type: GET_LITERATION_BY_USER_ID,
     payload: data,
-  }
+  };
 }
 export function successGetDataLiterationAdded(data) {
   return {
@@ -30,8 +31,6 @@ export function successGetDataLiterationAdded(data) {
     payload: data,
   };
 }
-
-
 
 export function getLiterationAdded() {
   return async (dispatch) => {
@@ -68,5 +67,40 @@ export function getLiterationAddedById(userId, literationId) {
     } catch (error) {
       console.log(error);
     }
+  };
+}
+
+export function addUserLiteration(userId, literationId) {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post("http://localhost:3030/user_literation/literation_added", {
+        user: userId,
+        literation: literationId,
+      });
+
+      if (response.status == 200) {
+        dispatch(getLiterationAddedById(userId, literationId));
+      } else {
+        console.log("Gagal menambahkan literasi");
+      }
+    } catch (error) {
+      console.log("Terjadi kesalahan:", error);
+    }
+  };
+}
+
+export function deleteUserLiteration(id) {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(`http://localhost:3030/user_literation/literation_added/${id}`, {
+        status: 0,
+      });
+
+      if (response.status == 200) {
+        dispatch(getLiterationAddedById(userId, literationId));
+      } else {
+        console.log("Gagal menambahkan literasi");
+      }
+    } catch (error) {}
   };
 }

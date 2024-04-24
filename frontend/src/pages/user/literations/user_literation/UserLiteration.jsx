@@ -1,37 +1,36 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getLiterationAdded, getLiterationByUserId } from '../../../../redux/action/literationAddedAction';
-import { userData } from '../../../../redux/action/userAction';
-import LiterationList from '../../../../component/LiterationList';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getLiterationAdded, getLiterationByUserId } from "../../../../redux/action/literationAddedAction";
+import { userData } from "../../../../redux/action/userAction";
+import LiterationList from "../../../../component/LiterationList";
 
 function UserLiteration() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const {dataUser, isLoadingUser} = useSelector((state)=>state.literationAdded)
+  const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
 
-    const user = useSelector((state) => state.user.data);
+  const user = useSelector((state) => state.user.data);
 
-    useEffect(() => {
-        dispatch(userData());
-      }, []);
+  useEffect(() => {
+    dispatch(userData());
+  }, []);
 
-      useEffect(() => {
-        if (user && user._id) {
-          localStorage.setItem("userId", user._id);
-        }
-      }, [user]);
+  useEffect(() => {
+    if (user && user._id) {
+      localStorage.setItem("userId", user._id);
+    }
+  }, [user]);
 
-      useEffect(() => {
-        const userId = localStorage.getItem("userId");
-        if (userId) {
-          dispatch(getLiterationByUserId(userId));
-        }
-      }, [dispatch]);
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(getLiterationByUserId(userId));
+    }
+  }, [dispatch]);
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-24 md:pb-0">
-        {console.log(dataUser)}
       <section id="populerGenre" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pb-16 pt-4 md:pt-32">
           <div className="w-full flex items-start md:items-center justify-between flex-col md:flex-row">
@@ -97,7 +96,7 @@ function UserLiteration() {
         </div>
       </section>
     </main>
-  )
+  );
 }
 
-export default UserLiteration
+export default UserLiteration;
