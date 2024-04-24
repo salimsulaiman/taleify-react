@@ -141,10 +141,7 @@ function Literations() {
                 )}
 
                 <div className="flex static lg:absolute -top-10">
-                  {!isLoadingLiteration &&
-                  literationAdded &&
-                  literationAdded != null &&
-                  literationAdded[0]?.status == 1 ? (
+                  {!isLoadingLiteration && literationAdded && literationAdded != null ? (
                     <div className="flex w-full">
                       <button
                         className="bg-gradient-to-r from-purple-light to-purple-semi-dark text-white px-4 py-2 rounded-md cursor-pointer text-sm md:text-base me-4 flex-grow sm:flex-grow-0"

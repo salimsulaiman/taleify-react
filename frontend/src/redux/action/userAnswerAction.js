@@ -3,11 +3,19 @@ import axios from "axios";
 export const FETCH_DATA = "FETCH_DATA";
 export const GET_USER_ANSWER = "GET_USER_ANSWER";
 export const GET_USER_ANSWER_BY_USER = "GET_USER_ANSWER_BY_USER";
+export const GET_USER_ANSWER_BY_USER_ID = "GET_USER_ANSWER_BY_USER_ID";
 export const ADD_USER_ANSWER = "ADD_USER_ANSWER";
 
 export function fetchData() {
   return {
     type: FETCH_DATA,
+  };
+}
+
+export function successGetUserAnswerByUserId(data) {
+  return {
+    type: GET_USER_ANSWER_BY_USER_ID,
+    payload: data,
   };
 }
 
@@ -32,6 +40,18 @@ export function successAddUserAnswer(data) {
   };
 }
 
+export function getUserAnswerByUserId(id) {
+  return async (dispatch) => {
+    dispatch(fetchData());
+    try {
+      const result = await axios.get(`http://localhost:3030/user_answer/user/${id}`);
+      dispatch(successGetUserAnswerByUserId(result.data));
+      console.log();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 export function getUserAnswer() {
   return async (dispatch) => {
     dispatch(fetchData());

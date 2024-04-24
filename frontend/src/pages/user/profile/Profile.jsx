@@ -10,14 +10,44 @@ import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import { FaCircleCheck } from "react-icons/fa6";
 import ListProgress from "../../../component/ListProgress";
 import { useNavigate } from "react-router-dom";
+import { getLiterationByUserId } from "../../../redux/action/literationAddedAction";
+import { getQuestion } from "../../../redux/action/questionAction";
+import { getUserAnswerByUserId } from "../../../redux/action/userAnswerAction";
 
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.data);
+  const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
+  const { data, isLoading } = useSelector((state) => state.question);
+  const { dataUserId, isLoadingUserId } = useSelector((state) => state.userAnswer);
 
   useEffect(() => {
     dispatch(userData);
+  }, []);
+
+  useEffect(() => {
+    if (user && user._id) {
+      localStorage.setItem("userId", user._id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(getLiterationByUserId(userId));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(getUserAnswerByUserId(userId));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getQuestion());
   }, []);
 
   const logout = () => {
@@ -99,13 +129,6 @@ function Profile() {
                       Simpan
                     </button>
                   </form>
-                  {/* {user.map((items: any, index: number) => {
-                  return (
-                    <div key={index} className="text-slate-400">
-                      <p>{items.name}</p>
-                    </div>
-                  );
-                })} */}
                 </div>
               </div>
               <button
@@ -119,7 +142,7 @@ function Profile() {
               <div className=" grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
-                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">3</h1>
+                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">{dataUser && dataUser.length}</h1>
                     <div className="text-sm text-slate-400">Daftar Literasi</div>
                   </div>
                   <IoBook className="text-4xl text-purple-light-400" />
@@ -127,7 +150,25 @@ function Profile() {
                 </div>
                 <div className="bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
-                    <h1 className="text-green-500 font-semibold mb-2 text-4xl">1</h1>
+                    <h1 className="text-green-500 font-semibold mb-2 text-4xl">
+                      {dataUser &&
+                        dataUser.reduce((acc, element) => {
+                          const literationId = element?.literation?._id;
+                          const progressCount = literationId
+                            ? dataUserId &&
+                              dataUserId.filter((el) => el?.question?.story?.literation === literationId).length
+                            : 0;
+                          const totalProgressCount = literationId
+                            ? data && data.filter((el) => el?.story?.literation?._id === literationId).length
+                            : 0;
+
+                          if (literationId && progressCount === totalProgressCount) {
+                            return acc + 1;
+                          } else {
+                            return acc;
+                          }
+                        }, 0)}
+                    </h1>
                     <div className="text-sm text-slate-400">Terselesaikan</div>
                   </div>
                   <FaCircleCheck className="text-4xl text-green-200" />
@@ -156,27 +197,26 @@ function Profile() {
                       <option value="semua">Belum Selesai</option>
                     </select>
                     <div id="progress" className="w-full mt-4">
-                      <ListProgress
-                        title={"Bridge of Unity: Guardian of One World"}
-                        src={"/fantasy.jpg"}
-                        genre="Fiksi"
-                        progress={5}
-                        totalProgress={7}
-                      />
-                      <ListProgress
-                        title={"Atlantis Kota Yang Hilang"}
-                        src={"/atlantis.png"}
-                        genre="Sejarah"
-                        progress={2}
-                        totalProgress={7}
-                      />
-                      <ListProgress
-                        title={"Aurora Penghias Langit"}
-                        src={"/aurora.jpg"}
-                        genre="Romantis"
-                        progress={4}
-                        totalProgress={7}
-                      />
+                      {dataUser &&
+                        dataUser.map((element) => {
+                          return (
+                            <ListProgress
+                              key={element._id}
+                              title={element?.literation?.title}
+                              src={element?.literation?.picture}
+                              genre={element?.literation?.genre?.name}
+                              progress={
+                                dataUserId &&
+                                dataUserId.filter((el) => el?.question?.story?.literation == element?.literation?._id)
+                                  .length
+                              }
+                              totalProgress={
+                                data &&
+                                data.filter((el) => el?.story?.literation?._id === element?.literation?._id).length
+                              }
+                            />
+                          );
+                        })}
                     </div>
                   </div>
                 </div>

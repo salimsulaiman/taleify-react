@@ -1,11 +1,19 @@
-import { ADD_USER_ANSWER, FETCH_DATA, GET_USER_ANSWER, GET_USER_ANSWER_BY_USER } from "../action/userAnswerAction";
+import {
+  ADD_USER_ANSWER,
+  FETCH_DATA,
+  GET_USER_ANSWER,
+  GET_USER_ANSWER_BY_USER,
+  GET_USER_ANSWER_BY_USER_ID,
+} from "../action/userAnswerAction";
 
 const initialState = {
   data: [],
   dataDetail: [],
+  dataUserId: [],
   isLoading: false,
   isLoadingDetail: false,
   isLoadingAnswer: false,
+  isLoadingUserId: false,
 };
 
 function userAnswerReducer(state = initialState, action) {
@@ -19,6 +27,12 @@ function userAnswerReducer(state = initialState, action) {
         ...state,
         data: action.payload,
         isLoading: false,
+      };
+    case GET_USER_ANSWER_BY_USER_ID:
+      return {
+        ...state,
+        dataUserId: action.payload,
+        isLoadingUserId: false,
       };
     case GET_USER_ANSWER_BY_USER:
       return {

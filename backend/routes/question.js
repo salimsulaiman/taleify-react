@@ -52,4 +52,23 @@ router.get("/story/:id", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const { story, question, answer, correct_answer, point } = await req.body;
+  const data = new Question({
+    story,
+    question,
+    answer,
+    correct_answer,
+    point,
+  });
+  try {
+    const saveData = await data.save();
+    res.json(saveData);
+  } catch (error) {
+    res.status(400).json({
+      message: "Failed to create question",
+    });
+  }
+});
+
 module.exports = router;

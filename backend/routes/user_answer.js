@@ -49,6 +49,30 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const data = await UserAnswer.find({ user: req.params.userId })
+      .populate({
+        path: "user",
+        select: "_id name email",
+      })
+      .populate({
+        path: "question",
+        select: "_id story question answer correct_answer",
+        populate: {
+          path: "story",
+          select: "_id literation story",
+        },
+      });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({
+      status: res.statusCode,
+      message: "Error",
+    });
+  }
+});
+
 router.get("/:userId/:questionId", async (req, res) => {
   try {
     const data = await UserAnswer.findOne({
