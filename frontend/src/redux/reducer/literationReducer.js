@@ -1,8 +1,11 @@
-import { FETCH_DATA, GET_LITERATION, GET_LITERATION_BY_ID } from "../action/literationAction";
+import { FETCH_DATA, GET_LITERATION, GET_LITERATION_BY_ID, SET_FILTERED_DATA, SET_SEARCH_QUERY } from "../action/literationAction";
 
 const initialState = {
   data: [],
   dataDetail: [],
+  searchQuery: '',
+  filteredData: [],
+  isLoadingFiltered: false,
   isLoading: false,
   isLoadingDetail: false,
 };
@@ -24,6 +27,17 @@ function literationReducer(state = initialState, action) {
         ...state,
         dataDetail: action.payload,
         isLoadingDetail: false,
+      };
+    case SET_SEARCH_QUERY:
+      return {
+        ...state,
+        searchQuery: action.payload
+      };
+    case SET_FILTERED_DATA:
+      return {
+        ...state,
+        filteredData: action.payload,
+        isLoadingFiltered: false
       };
     default:
       return state;

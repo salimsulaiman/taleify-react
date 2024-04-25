@@ -8,6 +8,7 @@ import { getLiterationById } from "../../../../redux/action/literationAction";
 import { getLiterationAddedById } from "../../../../redux/action/literationAddedAction";
 import { getStory, getStoryById, getStoryByIdLiteration } from "../../../../redux/action/storyAction";
 import StoryList from "../../../../component/StoryList";
+import { getUserAnswerByUserId } from "../../../../redux/action/userAnswerAction";
 
 function LiterationDetail() {
   const { id } = useParams();
@@ -20,6 +21,7 @@ function LiterationDetail() {
   const dataStory = useSelector((state) => state.story.data);
   const dataStoryLiteration = useSelector((state) => state.story.dataLiteration);
   const user = useSelector((state) => state.user.data);
+  const {dataUserId, isLoadingUserId} = useSelector((state)=>state.userAnswer);
 
   const expanded = () => {
     setIsExpanded(!isExpanded);
@@ -53,6 +55,14 @@ function LiterationDetail() {
       dispatch(getLiterationAddedById(userId, id));
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId && id) {
+      dispatch(getUserAnswerByUserId(userId));
+    }
+  }, [id, dispatch]);
+
 
   const openLiteration = () => {};
   const deleteLiteration = () => {};
@@ -129,11 +139,12 @@ function LiterationDetail() {
                 {dataStoryLiteration?.map((items, index) => {
                   return (
                     <div key={items._id}>
-                      <StoryList title={items.subTitle} status={1} index={index + 1} score={10} idStory={items._id} />
+                      <StoryList title={items.subTitle} status={
+                        dataUserId && dataUserId.filter((el)=>el?.question?.story?._id == items._id).length > 0 ? 1 : 0
+                      } index={index + 1} score={10} idStory={items._id} />
                     </div>
                   );
                 })}
-                {/* <StoryList title={"halo"} status={1} index={1} score={10} idStory={12313} /> */}
               </div>
             </div>
           </div>

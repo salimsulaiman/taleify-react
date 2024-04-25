@@ -11,6 +11,7 @@ import LiterationDetail from "./pages/user/literations/detail/LiterationDetail";
 import Story from "./pages/user/literations/story/Story";
 import Question from "./pages/user/literations/question/Question";
 import UserLiteration from "./pages/user/literations/user_literation/UserLiteration";
+import SearchLiteration from "./pages/user/literations/search/SearchLiteration";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/user/literations/story/:id" element={<Story />} />
           <Route path="/user/literations/question/:id" element={<Question />} />
           <Route path="/user/literations/user_literation" element={<UserLiteration />} />
+          <Route path="/user/literations/search" element={<SearchLiteration />} />
         </Route>
         <Route path="/user/signin" element={<SignIn />} />
         <Route path="/user/signup" element={<Signup />} />

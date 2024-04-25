@@ -3,9 +3,40 @@ const router = express.Router();
 
 const Literation = require("../models/Literation");
 
+router.post("/", async (req, res) => {
+  const { title, slug, picture, author, genre, rating, desc } = req.body;
+
+  const data = new Literation({
+    title, slug, picture, author, genre, rating, desc
+  });
+
+  try {
+    const saveLiteration = await data.save();
+    res.json(saveLiteration);
+  } catch (error) {
+    res.status(400).json({
+      message: "Failed to create literation"
+    });
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const data = await Literation.find({}).populate("author").populate("genre");
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({
+      status: res.statusCode,
+      message: "Error",
+    });
+  }
+});
+
+router.get("/search", async (req, res) => {
+  try {
+    const {title} = req.query;
+
+    const data = await Literation.find({ slug: { $regex: title, $options: "i" } }).populate("author").populate("genre");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -32,5 +63,6 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

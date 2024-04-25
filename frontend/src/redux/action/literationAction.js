@@ -3,6 +3,8 @@ import axios from "axios";
 export const FETCH_DATA = "FETCH_DATA";
 export const GET_LITERATION = "GET_LITERATION";
 export const GET_LITERATION_BY_ID = "GET_LITERATION_BY_ID";
+export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
+export const SET_FILTERED_DATA = "SET_FILTERED_DATA";
 
 export function fetchData() {
   return {
@@ -22,6 +24,32 @@ export function successGetLiterationById(data) {
     type: GET_LITERATION_BY_ID,
     payload: data,
   };
+}
+
+export function setSearchQuery(query){
+  return {
+    type: SET_SEARCH_QUERY,
+    payload: query
+  }
+}
+
+export function setFilteredData(data){
+  return {
+    type: SET_FILTERED_DATA,
+    payload: data
+  }
+}
+
+export function fetchFilteredData(query){
+  return async (dispatch)=>{
+    dispatch(fetchData());
+    try {
+      const result = await axios.get(`http://localhost:3030/literation/search/?title=${query}`);
+      dispatch(setFilteredData(result.data));
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export function getLiteration() {

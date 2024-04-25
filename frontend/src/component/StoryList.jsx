@@ -21,8 +21,8 @@ function StoryList({ title, status, index, score, idStory }) {
           <div className="flex flex-col items-center">
             <h4 className="text-xs text-slate-400 text-center hidden md:block">Status Literasi</h4>
             <h4
-              className={`text-xs bg-slate-100 px-2 py-1 rounded-md border-[1px] text-center ${
-                status == "0" ? "text-slate-500 border-slate-500 mt-2" : "text-green-700 border-green-700 mt-2"
+              className={`text-xs  px-2 py-1 rounded-md border-[1px] text-center ${
+                status == "0" ? "bg-slate-100 text-slate-500 border-slate-500 mt-2" : "bg-emerald-500 text-white border-emerald-700 mt-2"
               }`}
             >
               {status == "0" ? "Belum Selesai" : "Selesai"}
@@ -39,8 +39,8 @@ function StoryList({ title, status, index, score, idStory }) {
               onClick={storyNav}
               className={`text-sm px-4 py-2 rounded-xl  border-2 text-center ${
                 status == 0
-                  ? "text-slate-500 border-slate-500 bg-slate-100 cursor-not-allowed"
-                  : "text-purple-light border-purple-light hover:bg-purple-light hover:text-white cursor-pointer"
+                  ? "text-purple-light border-purple-light hover:bg-purple-light hover:text-white cursor-pointer"
+                  : "text-emerald-500 border-emerald-500 hover:bg-emerald-500 hover:text-white cursor-pointer"
               }`}
             >
               Lihat Cerita

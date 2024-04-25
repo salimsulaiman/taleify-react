@@ -4,20 +4,35 @@ import { useState, useEffect } from "react";
 import { BiSolidBookAlt } from "react-icons/bi";
 import { FaBell, FaSearch } from "react-icons/fa";
 import ModalSearch from "./ModalSearch";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import Logo from "../assets/image/logo.png";
 import Profile from "../assets/image/profile-user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { userData } from "../redux/action/userAction";
+import { setSearchQuery } from "../redux/action/literationAction";
 
 const NavApp = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
+  const [search, setSearch] = useState("")
+  const navigate = useNavigate()
 
   const location = useLocation();
 
   const { data, isLoading } = useSelector((state) => state.user);
+  const {searchQuery} = useSelector((state)=>state.literation)
+
+  const handleSearchInputChange = (event)=>{
+    const query = event.target.value;
+    setSearch(query)
+
+  }
+
+  const handleSearch = (e)=>{
+    e.preventDefault();
+    navigate(`/user/literations/search?title=${search}`)
+  }
 
   useEffect(() => {
     dispatch(userData());
@@ -64,13 +79,15 @@ const NavApp = () => {
         {/* <ModalSearch show={`${isSearchClicked ? "block" : "hidden"}`} /> */}
         <dialog id="searchModal" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box w-11/12 max-w-5xl">
-            <form action="" className="relative">
+            <form className="relative" onSubmit={handleSearch}>
               <input
                 // ref={inputRef}
                 type="text"
                 className="w-full min-h-full focus:outline-0 text-slate-500"
                 placeholder="Search..."
                 autoFocus
+                defaultValue={searchQuery}
+                onChange={handleSearchInputChange}
               />
               <FaSearch className="text-2xl text-slate-500 absolute right-0 top-0 cursor-pointer" />
             </form>
