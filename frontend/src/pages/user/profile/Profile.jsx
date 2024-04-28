@@ -142,7 +142,7 @@ function Profile() {
               <div className=" grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
-                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">{dataUser && dataUser.length}</h1>
+                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">{(dataUser ?? []).length}</h1>
                     <div className="text-sm text-slate-400">Daftar Literasi</div>
                   </div>
                   <IoBook className="text-4xl text-purple-light-400" />
@@ -151,23 +151,21 @@ function Profile() {
                 <div className="bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
                     <h1 className="text-green-500 font-semibold mb-2 text-4xl">
-                      {dataUser &&
-                        dataUser.reduce((acc, element) => {
-                          const literationId = element?.literation?._id;
-                          const progressCount = literationId
-                            ? dataUserId &&
-                              dataUserId.filter((el) => el?.question?.story?.literation === literationId).length
-                            : 0;
-                          const totalProgressCount = literationId
-                            ? data && data.filter((el) => el?.story?.literation?._id === literationId).length
-                            : 0;
+                      {(dataUser ?? []).reduce((acc, element) => {
+                        const literationId = element?.literation?._id;
+                        const progressCount = literationId
+                          ? (dataUserId ?? []).filter((el) => el?.question?.story?.literation === literationId).length
+                          : 0;
+                        const totalProgressCount = literationId
+                          ? (data ?? []).filter((el) => el?.story?.literation?._id === literationId).length
+                          : 0;
 
-                          if (literationId && progressCount === totalProgressCount) {
-                            return acc + 1;
-                          } else {
-                            return acc;
-                          }
-                        }, 0)}
+                        if (literationId && progressCount === totalProgressCount) {
+                          return acc + 1;
+                        } else {
+                          return acc;
+                        }
+                      }, 0)}
                     </h1>
                     <div className="text-sm text-slate-400">Terselesaikan</div>
                   </div>

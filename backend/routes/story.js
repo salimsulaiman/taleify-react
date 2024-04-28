@@ -64,4 +64,23 @@ router.get("/literation/:id", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const { literation, subTitle, story } = req.body;
+
+  const data = new Story({
+    literation,
+    subTitle,
+    story,
+  });
+
+  try {
+    const saveStory = await data.save();
+    res.json(saveStory);
+  } catch (error) {
+    res.status(400).json({
+      message: "Failed to create story",
+    });
+  }
+});
+
 module.exports = router;

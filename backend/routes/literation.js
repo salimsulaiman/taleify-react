@@ -4,10 +4,26 @@ const router = express.Router();
 const Literation = require("../models/Literation");
 
 router.post("/", async (req, res) => {
-  const { title, slug, picture, author, genre, rating, desc } = req.body;
+  const { title, picture, author, genre, rating, desc } = req.body;
+
+  function stringToSlug(str) {
+    str = str.trim().toLowerCase();
+
+    str = str.replace(/\s+/g, "-");
+
+    str = str.replace(/[^\w-]/g, "");
+
+    return str;
+  }
 
   const data = new Literation({
-    title, slug, picture, author, genre, rating, desc
+    title,
+    slug: stringToSlug(title),
+    picture,
+    author,
+    genre,
+    rating,
+    desc,
   });
 
   try {
@@ -15,7 +31,7 @@ router.post("/", async (req, res) => {
     res.json(saveLiteration);
   } catch (error) {
     res.status(400).json({
-      message: "Failed to create literation"
+      message: "Failed to create literation",
     });
   }
 });
@@ -34,9 +50,11 @@ router.get("/", async (req, res) => {
 
 router.get("/search", async (req, res) => {
   try {
-    const {title} = req.query;
+    const { title } = req.query;
 
-    const data = await Literation.find({ slug: { $regex: title, $options: "i" } }).populate("author").populate("genre");
+    const data = await Literation.find({ slug: { $regex: title, $options: "i" } })
+      .populate("author")
+      .populate("genre");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -63,6 +81,5 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

@@ -15,24 +15,23 @@ import { setSearchQuery } from "../redux/action/literationAction";
 const NavApp = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
-  const [search, setSearch] = useState("")
-  const navigate = useNavigate()
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const location = useLocation();
 
   const { data, isLoading } = useSelector((state) => state.user);
-  const {searchQuery} = useSelector((state)=>state.literation)
+  const { searchQuery } = useSelector((state) => state.literation);
 
-  const handleSearchInputChange = (event)=>{
+  const handleSearchInputChange = (event) => {
     const query = event.target.value;
-    setSearch(query)
+    setSearch(query);
+  };
 
-  }
-
-  const handleSearch = (e)=>{
+  const handleSearch = (e) => {
     e.preventDefault();
-    navigate(`/user/literations/search?title=${search}`)
-  }
+    navigate(`/user/literations/search?title=${search}`);
+  };
 
   useEffect(() => {
     dispatch(userData());
@@ -89,7 +88,10 @@ const NavApp = () => {
                 defaultValue={searchQuery}
                 onChange={handleSearchInputChange}
               />
-              <FaSearch className="text-2xl text-slate-500 absolute right-0 top-0 cursor-pointer" />
+              <FaSearch
+                className="text-2xl text-slate-500 absolute right-0 top-0 cursor-pointer"
+                onClick={handleSearch}
+              />
             </form>
           </div>
           <form method="dialog" className="modal-backdrop">
