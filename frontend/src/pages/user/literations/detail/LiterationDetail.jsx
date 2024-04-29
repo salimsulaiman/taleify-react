@@ -9,6 +9,7 @@ import { getLiterationAddedById } from "../../../../redux/action/literationAdded
 import { getStory, getStoryById, getStoryByIdLiteration } from "../../../../redux/action/storyAction";
 import StoryList from "../../../../component/StoryList";
 import { getUserAnswerByUserId } from "../../../../redux/action/userAnswerAction";
+import { getQuestion } from "../../../../redux/action/questionAction";
 
 function LiterationDetail() {
   const { id } = useParams();
@@ -21,7 +22,8 @@ function LiterationDetail() {
   const dataStory = useSelector((state) => state.story.data);
   const dataStoryLiteration = useSelector((state) => state.story.dataLiteration);
   const user = useSelector((state) => state.user.data);
-  const {dataUserId, isLoadingUserId} = useSelector((state)=>state.userAnswer);
+  const { dataUserId, isLoadingUserId } = useSelector((state) => state.userAnswer);
+  const { data, isLoading } = useSelector((state) => state.question);
 
   const expanded = () => {
     setIsExpanded(!isExpanded);
@@ -44,6 +46,10 @@ function LiterationDetail() {
   }, []);
 
   useEffect(() => {
+    dispatch(getQuestion());
+  }, [location]);
+
+  useEffect(() => {
     if (user && user._id) {
       localStorage.setItem("userId", user._id);
     }
@@ -62,7 +68,6 @@ function LiterationDetail() {
       dispatch(getUserAnswerByUserId(userId));
     }
   }, [id, dispatch]);
-
 
   const openLiteration = () => {};
   const deleteLiteration = () => {};
@@ -137,11 +142,20 @@ function LiterationDetail() {
               </div>
               <div className="col-span-4 mt-4">
                 {dataStoryLiteration?.map((items, index) => {
+                  const filteredData = data && data.filter((el) => el?.story?._id === items?._id);
                   return (
                     <div key={items._id}>
-                      <StoryList title={items.subTitle} status={
-                        dataUserId && dataUserId.filter((el)=>el?.question?.story?._id == items._id).length > 0 ? 1 : 0
-                      } index={index + 1} score={10} idStory={items._id} />
+                      <StoryList
+                        title={items.subTitle}
+                        status={
+                          dataUserId && dataUserId.filter((el) => el?.question?.story?._id == items._id).length > 0
+                            ? 1
+                            : 0
+                        }
+                        index={index + 1}
+                        score={filteredData && filteredData[0] && filteredData[0]?.point}
+                        idStory={items._id}
+                      />
                     </div>
                   );
                 })}
