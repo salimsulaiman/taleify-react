@@ -15,6 +15,7 @@ function literationReducer(state = initialState, action) {
     case FETCH_DATA:
       return {
         isLoading: true,
+        isLoadingFiltered: true,
       };
     case GET_LITERATION:
       return {

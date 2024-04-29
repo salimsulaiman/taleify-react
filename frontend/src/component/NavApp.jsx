@@ -24,18 +24,42 @@ const NavApp = () => {
   const { searchQuery } = useSelector((state) => state.literation);
 
   const handleSearchInputChange = (event) => {
-    const query = event.target.value;
-    setSearch(query);
+    setSearch(event.target.value);
   };
 
+
+  const stringToSlug = (str)=>{
+    str = str.trim().toLowerCase();
+
+    str = str.replace(/\s+/g, "-");
+
+    str = str.replace(/[^\w-]/g, "");
+
+    return str;
+  }
   const handleSearch = (e) => {
     e.preventDefault();
-    navigate(`/user/literations/search?title=${search}`);
+    setSearch("");
+    navigate(`/user/literations/search?title=${stringToSlug(search)}`);
+    document.getElementById("searchModal").close();
   };
 
   useEffect(() => {
     dispatch(userData());
   }, [location, dispatch]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const handleKeyDown = (e) => {
+    if (e.ctrlKey && e.key === "k") {
+      document.getElementById("searchModal").showModal();
+    }
+  };
 
   return (
     <div className="w-full">
@@ -86,7 +110,7 @@ const NavApp = () => {
                 placeholder="Search..."
                 autoFocus
                 defaultValue={searchQuery}
-                onChange={handleSearchInputChange}
+                onChange={(handleSearchInputChange)}
               />
               <FaSearch
                 className="text-2xl text-slate-500 absolute right-0 top-0 cursor-pointer"

@@ -9,7 +9,7 @@ import { IoBook, IoStar } from "react-icons/io5";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import { FaCircleCheck } from "react-icons/fa6";
 import ListProgress from "../../../component/ListProgress";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getLiterationByUserId } from "../../../redux/action/literationAddedAction";
 import { getQuestion } from "../../../redux/action/questionAction";
 import { getUserAnswerByUserId } from "../../../redux/action/userAnswerAction";
@@ -17,6 +17,7 @@ import { getUserAnswerByUserId } from "../../../redux/action/userAnswerAction";
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation()
   const user = useSelector((state) => state.user.data);
   const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
   const { data, isLoading } = useSelector((state) => state.question);
@@ -37,18 +38,18 @@ function Profile() {
     if (userId) {
       dispatch(getLiterationByUserId(userId));
     }
-  }, [dispatch]);
+  }, [dispatch, location]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
       dispatch(getUserAnswerByUserId(userId));
     }
-  }, [dispatch]);
+  }, [dispatch, location]);
 
   useEffect(() => {
     dispatch(getQuestion());
-  }, []);
+  }, [location]);
 
   const logout = () => {
     localStorage.removeItem("token");

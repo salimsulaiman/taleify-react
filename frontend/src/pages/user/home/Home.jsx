@@ -11,7 +11,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/thumbs";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NavApp from "../../../component/NavApp";
 import CardLiteration from "../../../component/CardLiteration";
 import LiterationList from "../../../component/LiterationList";
@@ -22,6 +22,7 @@ import { getLiteration } from "../../../redux/action/literationAction";
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation()
 
   const { data, isLoading } = useSelector((state) => state.literation);
 
@@ -35,7 +36,7 @@ function Home() {
 
   useEffect(() => {
     dispatch(getLiteration());
-  }, []);
+  }, [location]);
 
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-24 md:pb-0">

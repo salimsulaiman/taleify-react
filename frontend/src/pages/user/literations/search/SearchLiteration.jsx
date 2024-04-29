@@ -16,7 +16,7 @@ function SearchLiteration() {
     
   useEffect(() => {
     dispatch(fetchFilteredData(title));
-  }, [title]);
+  }, [title, dispatch, location]);
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-24 md:pb-0">
      <section id="populerGenre" className="w-full">
@@ -62,23 +62,24 @@ function SearchLiteration() {
                 rating={null}
                 slug={null}
               />
+            ) : filteredData &&  filteredData.length > 0 ? (
+              filteredData.map((element) => (
+                <div key={element._id}>
+                  <LiterationList
+                    id={element._id}
+                    title={element.title}
+                    author={element.author.name}
+                    genre={element.genre.name}
+                    image={element.picture}
+                    rating={element.rating}
+                    slug={element.slug}
+                  />
+                </div>
+              ))
             ) : (
-              filteredData &&
-              filteredData.map((element) => {
-                return (
-                  <div key={element._id}>
-                    <LiterationList
-                      id={element._id}
-                      title={element.title}
-                      author={element.author.name}
-                      genre={element.genre.name}
-                      image={element.picture}
-                      rating={element.rating}
-                      slug={element.slug}
-                    />
-                  </div>
-                );
-              })
+              <div className="w-full flex justify-center items-center col-span-12 min-h-32">
+                <p className="text-center text-slate-600 font-medium text-xl">Literasi tidak ditemukan</p>
+              </div>
             )}
           </div>
         </div>
