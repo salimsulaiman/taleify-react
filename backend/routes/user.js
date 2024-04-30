@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const { verifyToken } = require("./verifytoken");
+const UserPoint = require("../models/UserPoint");
 
 router.get("/", async (req, res) => {
   try {
@@ -72,7 +73,18 @@ router.post("/signup", async (req, res) => {
 
   try {
     const saveUser = await user.save();
-    res.json(saveUser);
+
+    if (saveUser) {
+      const userId = saveUser._id;
+      const userPoint = new UserPoint({
+        user: userId,
+        point: 0,
+      });
+
+      const saveUserPoint = await userPoint.save();
+
+      res.json({ user: saveUser, saveUserPoint });
+    }
   } catch (error) {
     res.status(400).json({
       message: "Failed to register",

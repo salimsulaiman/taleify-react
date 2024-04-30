@@ -4,6 +4,7 @@ export const FETCH_DATA = "FETCH_DATA";
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGOUT_USER = "LOGOUT_USER";
+export const SUCCESS_SIGNUP = "SUCCESS_SIGNUP";
 export const USER_DATA = "USER_DATA";
 
 export function fetchData() {
@@ -22,6 +23,13 @@ export function getUserData(data) {
 export function loginError() {
   return {
     type: LOGIN_ERROR,
+  };
+}
+
+export function successSignup(data) {
+  return {
+    type: SUCCESS_SIGNUP,
+    payload: data,
   };
 }
 
@@ -52,6 +60,22 @@ export function loginUser(email, password) {
       localStorage.setItem("token", result.data.token);
     } catch (error) {
       dispatch(loginError());
+    }
+  };
+}
+
+export function registerUser(name, email, password) {
+  return async (dispatch) => {
+    try {
+      const result = await axios.post("http://localhost:3030/user/signup/", {
+        name: name,
+        email: email,
+        password: password,
+      });
+
+      dispatch(successSignup(result.data));
+    } catch (error) {
+      console.log(error);
     }
   };
 }

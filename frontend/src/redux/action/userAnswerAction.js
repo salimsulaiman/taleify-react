@@ -46,7 +46,6 @@ export function getUserAnswerByUserId(id) {
     try {
       const result = await axios.get(`http://localhost:3030/user_answer/user/${id}`);
       dispatch(successGetUserAnswerByUserId(result.data));
-      console.log();
     } catch (error) {
       console.log(error);
     }

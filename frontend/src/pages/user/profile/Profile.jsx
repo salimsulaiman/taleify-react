@@ -13,15 +13,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getLiterationByUserId } from "../../../redux/action/literationAddedAction";
 import { getQuestion } from "../../../redux/action/questionAction";
 import { getUserAnswerByUserId } from "../../../redux/action/userAnswerAction";
+import { getUserPointByUserId } from "../../../redux/action/userPointAction";
 
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const user = useSelector((state) => state.user.data);
   const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
   const { data, isLoading } = useSelector((state) => state.question);
   const { dataUserId, isLoadingUserId } = useSelector((state) => state.userAnswer);
+  const dataPoint = useSelector((state) => state.userPoint.dataDetail);
 
   useEffect(() => {
     dispatch(userData);
@@ -44,6 +46,13 @@ function Profile() {
     const userId = localStorage.getItem("userId");
     if (userId) {
       dispatch(getUserAnswerByUserId(userId));
+    }
+  }, [dispatch, location]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(getUserPointByUserId("6630b54ef222cc9adea02a33"));
     }
   }, [dispatch, location]);
 
@@ -175,7 +184,9 @@ function Profile() {
                 </div>
                 <div className="col-span-2 md:col-span-1 bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
-                    <h1 className="text-yellow-300 font-semibold mb-2 text-4xl">100</h1>
+                    <h1 className="text-yellow-300 font-semibold mb-2 text-4xl">
+                      {dataPoint && dataPoint[0] && dataPoint[0]?.point}
+                    </h1>
                     <div className="text-sm text-slate-400">Poin Literasi</div>
                   </div>
                   <IoStar className="text-4xl text-yellow-100" />

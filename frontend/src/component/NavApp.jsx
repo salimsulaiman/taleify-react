@@ -27,8 +27,7 @@ const NavApp = () => {
     setSearch(event.target.value);
   };
 
-
-  const stringToSlug = (str)=>{
+  const stringToSlug = (str) => {
     str = str.trim().toLowerCase();
 
     str = str.replace(/\s+/g, "-");
@@ -36,7 +35,7 @@ const NavApp = () => {
     str = str.replace(/[^\w-]/g, "");
 
     return str;
-  }
+  };
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch("");
@@ -57,7 +56,13 @@ const NavApp = () => {
 
   const handleKeyDown = (e) => {
     if (e.ctrlKey && e.key === "k") {
-      document.getElementById("searchModal").showModal();
+      e.preventDefault();
+      const searchModal = document.getElementById("searchModal");
+      if (searchModal.open) {
+        searchModal.close();
+      } else {
+        searchModal.showModal();
+      }
     }
   };
 
@@ -110,7 +115,7 @@ const NavApp = () => {
                 placeholder="Search..."
                 autoFocus
                 defaultValue={searchQuery}
-                onChange={(handleSearchInputChange)}
+                onChange={handleSearchInputChange}
               />
               <FaSearch
                 className="text-2xl text-slate-500 absolute right-0 top-0 cursor-pointer"

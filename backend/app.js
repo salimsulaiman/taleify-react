@@ -17,6 +17,7 @@ const userLiterationRoutes = require("./routes/user_literation");
 const storyRoutes = require("./routes/story");
 const questionRoutes = require("./routes/question");
 const userAnswerRoutes = require("./routes/user_answer");
+const userPointRoutes = require("./routes/user_point");
 
 // routes
 app.use("/literation", literationRoutes);
@@ -27,6 +28,7 @@ app.use("/user_literation", userLiterationRoutes);
 app.use("/story", storyRoutes);
 app.use("/question", questionRoutes);
 app.use("/user_answer", userAnswerRoutes);
+app.use("/user_point", userPointRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
