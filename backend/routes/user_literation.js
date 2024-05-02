@@ -28,7 +28,10 @@ router.get("/literation_added/:userId/:literationId", async (req, res) => {
   const userId = req.params.userId;
   const literationId = req.params.literationId;
   try {
-    const data = await UserLiteration.find({ user: userId, literation: literationId })
+    const data = await UserLiteration.find({
+      user: userId,
+      literation: literationId,
+    })
       .populate({
         path: "user",
         select: "_id name",
@@ -66,6 +69,45 @@ router.get("/literation_added/:userId", async (req, res) => {
         },
       });
     if (data.length == 0) {
+      res.status(200).json(null);
+    } else {
+      res.status(200).json(data);
+    }
+  } catch (error) {
+    res.status(400).json({
+      status: res.statusCode,
+      message: "Error",
+    });
+  }
+});
+
+router.get("/literation_added_sorted/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const sortOrder = req.query.sortOrder || "asc"; // Default to 'asc' if sortOrder is not provided
+
+  try {
+    let dataQuery = UserLiteration.find({ user: userId, status: 1 })
+      .populate({
+        path: "user",
+        select: "_id name",
+      })
+      .populate({
+        path: "literation",
+        populate: {
+          path: "genre",
+          select: "_id name",
+        },
+      });
+
+    if (sortOrder === "asc") {
+      dataQuery = dataQuery.sort({ createdAt: 1 }); // Sort by dateAdded in ascending order
+    } else if (sortOrder === "desc") {
+      dataQuery = dataQuery.sort({ createdAt: -1 }); // Sort by dateAdded in descending order
+    }
+
+    const data = await dataQuery.exec();
+
+    if (data.length === 0) {
       res.status(200).json(null);
     } else {
       res.status(200).json(data);

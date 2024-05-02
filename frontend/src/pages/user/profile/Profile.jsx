@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import NavApp from "../../../component/NavApp";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { userData } from "../../../redux/action/userAction";
 
-import { ArrowLeftCircleIcon, PencilIcon, StarIcon } from "@heroicons/react/16/solid";
+import {
+  ArrowLeftCircleIcon,
+  PencilIcon,
+  StarIcon,
+} from "@heroicons/react/16/solid";
 import { IoBook, IoStar } from "react-icons/io5";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -19,10 +23,15 @@ function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [filter, setFilter] = useState("all");
   const user = useSelector((state) => state.user.data);
-  const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
+  const { dataUser, isLoadingUser } = useSelector(
+    (state) => state.literationAdded
+  );
   const { data, isLoading } = useSelector((state) => state.question);
-  const { dataUserId, isLoadingUserId } = useSelector((state) => state.userAnswer);
+  const { dataUserId, isLoadingUserId } = useSelector(
+    (state) => state.userAnswer
+  );
   const dataPoint = useSelector((state) => state.userPoint.dataDetail);
 
   useEffect(() => {
@@ -84,10 +93,17 @@ function Profile() {
                       <PencilIcon className="text-slate-500" />
                     </div>
                   </div>
-                  {user && <h1 className="text-slate-500 font-semibold mb-4">{user.name}</h1>}
+                  {user && (
+                    <h1 className="text-slate-500 font-semibold mb-4">
+                      {user.name}
+                    </h1>
+                  )}
                   <form action="" className="w-full">
                     <div className="form-group w-full relative mb-3">
-                      <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="name">
+                      <label
+                        className="text-xs text-slate-400 absolute z-10 left-3 top-2"
+                        htmlFor="name"
+                      >
                         Nama
                       </label>
                       <input
@@ -97,7 +113,10 @@ function Profile() {
                       />
                     </div>
                     <div className="form-group w-full relative mb-3">
-                      <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="email">
+                      <label
+                        className="text-xs text-slate-400 absolute z-10 left-3 top-2"
+                        htmlFor="email"
+                      >
                         Email
                       </label>
                       <input
@@ -116,7 +135,10 @@ function Profile() {
                 <div className="flex flex-col justify-center items-center">
                   <form action="" className="w-full">
                     <div className="form-group w-full relative mb-3">
-                      <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="password">
+                      <label
+                        className="text-xs text-slate-400 absolute z-10 left-3 top-2"
+                        htmlFor="password"
+                      >
                         Password
                       </label>
                       <input
@@ -126,7 +148,10 @@ function Profile() {
                       />
                     </div>
                     <div className="form-group w-full relative mb-3">
-                      <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="newPassword">
+                      <label
+                        className="text-xs text-slate-400 absolute z-10 left-3 top-2"
+                        htmlFor="newPassword"
+                      >
                         Password Baru
                       </label>
                       <input
@@ -152,8 +177,12 @@ function Profile() {
               <div className=" grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-white rounded-xl h-32 border-2 border-slate-200 p-6 flex justify-between items-center relative">
                   <div className="flex flex-col mb-4">
-                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">{(dataUser ?? []).length}</h1>
-                    <div className="text-sm text-slate-400">Daftar Literasi</div>
+                    <h1 className="text-purple-semi-dark font-semibold mb-2 text-4xl">
+                      {(dataUser ?? []).length}
+                    </h1>
+                    <div className="text-sm text-slate-400">
+                      Daftar Literasi
+                    </div>
                   </div>
                   <IoBook className="text-4xl text-purple-light-400" />
                   <HiMiniQuestionMarkCircle className="text-lg text-slate-400 absolute right-2 top-2" />
@@ -164,13 +193,22 @@ function Profile() {
                       {(dataUser ?? []).reduce((acc, element) => {
                         const literationId = element?.literation?._id;
                         const progressCount = literationId
-                          ? (dataUserId ?? []).filter((el) => el?.question?.story?.literation === literationId).length
+                          ? (dataUserId ?? []).filter(
+                              (el) =>
+                                el?.question?.story?.literation === literationId
+                            ).length
                           : 0;
                         const totalProgressCount = literationId
-                          ? (data ?? []).filter((el) => el?.story?.literation?._id === literationId).length
+                          ? (data ?? []).filter(
+                              (el) =>
+                                el?.story?.literation?._id === literationId
+                            ).length
                           : 0;
 
-                        if (literationId && progressCount === totalProgressCount) {
+                        if (
+                          literationId &&
+                          progressCount === totalProgressCount
+                        ) {
                           return acc + 1;
                         } else {
                           return acc;
@@ -200,33 +238,61 @@ function Profile() {
                       name="category"
                       id="category"
                       className="border-2 border-slate-200 bg-slate-100 rounded-lg text-slate-500 px-2 py-2"
+                      onChange={(e) => setFilter(e.target.value)}
                     >
-                      <option value="semua">Terbaru</option>
-                      <option value="semua">Terlama</option>
-                      <option value="semua">Selesai</option>
-                      <option value="semua">Belum Selesai</option>
+                      <option value="all">Semua</option>
+                      <option value="new">Terbaru</option>
+                      <option value="old">Terlama</option>
+                      <option value="finished">Selesai</option>
+                      <option value="notFinished">Belum Selesai</option>
                     </select>
                     <div id="progress" className="w-full mt-4">
                       {dataUser &&
-                        dataUser.map((element) => {
-                          return (
-                            <ListProgress
-                              key={element._id}
-                              title={element?.literation?.title}
-                              src={element?.literation?.picture}
-                              genre={element?.literation?.genre?.name}
-                              progress={
-                                dataUserId &&
-                                dataUserId.filter((el) => el?.question?.story?.literation == element?.literation?._id)
-                                  .length
-                              }
-                              totalProgress={
-                                data &&
-                                data.filter((el) => el?.story?.literation?._id === element?.literation?._id).length
-                              }
-                            />
-                          );
-                        })}
+                        dataUser
+                          .sort((a, b) => {
+                            if (filter === "all") {
+                              return (
+                                new Date(a.createdAt) - new Date(b.createdAt)
+                              );
+                            } else if (filter === "new") {
+                              return (
+                                new Date(a.createdAt) - new Date(b.createdAt)
+                              );
+                            } else if (filter === "old") {
+                              return (
+                                new Date(b.createdAt) - new Date(a.createdAt)
+                              );
+                            } else {
+                              return 0;
+                            }
+                          })
+                          .map((element) => {
+                            return (
+                              <ListProgress
+                                key={element._id}
+                                id={element?.literation?._id}
+                                title={element?.literation?.title}
+                                src={element?.literation?.picture}
+                                genre={element?.literation?.genre?.name}
+                                progress={
+                                  dataUserId &&
+                                  dataUserId.filter(
+                                    (el) =>
+                                      el?.question?.story?.literation ==
+                                      element?.literation?._id
+                                  ).length
+                                }
+                                totalProgress={
+                                  data &&
+                                  data.filter(
+                                    (el) =>
+                                      el?.story?.literation?._id ===
+                                      element?.literation?._id
+                                  ).length
+                                }
+                              />
+                            );
+                          })}
                     </div>
                   </div>
                 </div>

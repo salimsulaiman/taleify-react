@@ -4,6 +4,7 @@ import { getQuestion, getQuestionyByStoryId } from "../../../../redux/action/que
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftCircleIcon } from "@heroicons/react/16/solid";
 import { addUserAnswer, getUserAnswerByUser } from "../../../../redux/action/userAnswerAction";
+import { addUserPoint } from "../../../../redux/action/userPointAction";
 
 function Question() {
   const { id } = useParams();
@@ -40,13 +41,20 @@ function Question() {
   };
 
   const saveAnswer = () => {
-    if (selectedAnswer == dataDetail?.correct_answer) {
-      alert("Selamat Jawabanmu Benar");
-    } else {
-      alert("Maaf Jawabanmu salah");
-    }
 
     const userId = localStorage.getItem("userId");
+    if (selectedAnswer == dataDetail?.correct_answer) {
+      alert("Selamat Jawabanmu Benar");
+      const point = dataDetail && dataDetail.point
+      if (point && userId) {
+        dispatch(addUserPoint(userId, point))
+      }
+    } else {
+      alert("Maaf Jawabanmu salah");
+      if (userId) {
+        dispatch(addUserPoint(userId, 0))
+      }
+    }
 
     dispatch(addUserAnswer(userId, dataDetail?._id, selectedAnswer)).then(
       navigate(`/user/literations/detail/${dataDetail?.story?.literation?._id}`)

@@ -1,4 +1,4 @@
-import { FETCH_DATA, GET_USER_POINT, GET_USER_POINT_BY_USER_ID } from "../action/userPointAction";
+import { ADD_USER_POINT, FETCH_DATA, GET_USER_POINT, GET_USER_POINT_BY_USER_ID } from "../action/userPointAction";
 
 const initialState = {
   data: [],
@@ -12,6 +12,7 @@ function userPointReducer(state = initialState, action) {
     case FETCH_DATA:
       return {
         isLoading: true,
+        isLoadingDetail: true
       };
     case GET_USER_POINT:
       return {
@@ -23,6 +24,11 @@ function userPointReducer(state = initialState, action) {
       return {
         ...state,
         dataDetail: action.payload,
+        isLoadingDetail: false,
+      };
+    case ADD_USER_POINT:
+      return {
+        ...state,
         isLoadingDetail: false,
       };
     default:
