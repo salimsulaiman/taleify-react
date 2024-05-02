@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getQuestion, getQuestionyByStoryId } from "../../../../redux/action/questionAction";
+import {
+  getQuestion,
+  getQuestionyByStoryId,
+} from "../../../../redux/action/questionAction";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftCircleIcon } from "@heroicons/react/16/solid";
-import { addUserAnswer, getUserAnswerByUser } from "../../../../redux/action/userAnswerAction";
+import {
+  addUserAnswer,
+  getUserAnswerByUser,
+} from "../../../../redux/action/userAnswerAction";
 import { addUserPoint } from "../../../../redux/action/userPointAction";
 
 function Question() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { dataDetail, isLoadingDetail } = useSelector((state) => state.question);
+  const { dataDetail, isLoadingDetail } = useSelector(
+    (state) => state.question
+  );
   const user = useSelector((state) => state.user.data);
   const userAnswer = useSelector((state) => state.userAnswer.dataDetail);
 
@@ -41,18 +49,17 @@ function Question() {
   };
 
   const saveAnswer = () => {
-
     const userId = localStorage.getItem("userId");
     if (selectedAnswer == dataDetail?.correct_answer) {
       alert("Selamat Jawabanmu Benar");
-      const point = dataDetail && dataDetail.point
+      const point = dataDetail && dataDetail.point;
       if (point && userId) {
-        dispatch(addUserPoint(userId, point))
+        dispatch(addUserPoint(userId, point));
       }
     } else {
       alert("Maaf Jawabanmu salah");
       if (userId) {
-        dispatch(addUserPoint(userId, 0))
+        dispatch(addUserPoint(userId, 0));
       }
     }
 
@@ -76,10 +83,14 @@ function Question() {
               <h4 className="text-slate-500 text-sm font-semibold mb-2 line-clamp-1">
                 {dataDetail?.story?.literation?.title}
               </h4>
-              <h1 className="text-slate-600 text-xl font-semibold line-clamp-1">{dataDetail?.story?.subTitle}</h1>
+              <h1 className="text-slate-600 text-xl font-semibold line-clamp-1">
+                {dataDetail?.story?.subTitle}
+              </h1>
             </div>
             <div className="w-full bg-white h-auto rounded-xl p-11 flex flex-col items-start justify-center mb-4">
-              <h4 className="w-full text-slate-500 text-base mb-8 text-center">{dataDetail?.question}</h4>
+              <h4 className="w-full text-slate-500 text-base mb-8 text-center">
+                {dataDetail?.question}
+              </h4>
               <div className="grid grid-cols-1 w-full sm:w-11/12 md:w-2/3 lg:w-1/2 mx-auto gap-4">
                 <div className="flex items-center mb-2">
                   <input
@@ -96,7 +107,9 @@ function Question() {
                   >
                     <span
                       className={`${
-                        selectedAnswer == "A" ? "bg-white text-purple-light" : "bg-purple-light text-white"
+                        selectedAnswer == "A"
+                          ? "bg-white text-purple-light"
+                          : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
                       A
@@ -119,7 +132,9 @@ function Question() {
                   >
                     <span
                       className={`${
-                        selectedAnswer == "B" ? "bg-white text-purple-light" : "bg-purple-light text-white"
+                        selectedAnswer == "B"
+                          ? "bg-white text-purple-light"
+                          : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
                       B
@@ -142,7 +157,9 @@ function Question() {
                   >
                     <span
                       className={`${
-                        selectedAnswer == "C" ? "bg-white text-purple-light" : "bg-purple-light text-white"
+                        selectedAnswer == "C"
+                          ? "bg-white text-purple-light"
+                          : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
                       C
@@ -165,7 +182,9 @@ function Question() {
                   >
                     <span
                       className={`${
-                        selectedAnswer == "D" ? "bg-white text-purple-light" : "bg-purple-light text-white"
+                        selectedAnswer == "D"
+                          ? "bg-white text-purple-light"
+                          : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
                       D
@@ -200,13 +219,24 @@ function Question() {
               <h4 className="text-slate-500 text-sm font-semibold mb-2 line-clamp-1">
                 {dataDetail?.story?.literation?.title}
               </h4>
-              <h1 className="text-slate-600 text-xl font-semibold line-clamp-1">{dataDetail?.story?.subTitle}</h1>
+              <h1 className="text-slate-600 text-xl font-semibold line-clamp-1">
+                {dataDetail?.story?.subTitle}
+              </h1>
             </div>
             <div className="w-full bg-white h-auto rounded-xl p-11 flex flex-col items-start justify-center mb-4">
-              <h4 className="w-full text-slate-500 text-base mb-8 text-center">{dataDetail?.question}</h4>
+              <h4 className="w-full text-slate-500 text-base mb-8 text-center">
+                {dataDetail?.question}
+              </h4>
               <div className="grid grid-cols-1 w-full sm:w-11/12 md:w-2/3 lg:w-1/2 mx-auto gap-4">
                 <div className="flex items-center mb-2">
-                  <input type="radio" id="answerOption1" name="answerOptions" value="A" className="hidden" disabled />
+                  <input
+                    type="radio"
+                    id="answerOption1"
+                    name="answerOptions"
+                    value="A"
+                    className="hidden"
+                    disabled
+                  />
 
                   <label
                     htmlFor="answerOption1"
@@ -231,7 +261,14 @@ function Question() {
                   </label>
                 </div>
                 <div className="flex items-center mb-2">
-                  <input type="radio" id="answerOption2" name="answerOptions" value="B" className="hidden" disabled />
+                  <input
+                    type="radio"
+                    id="answerOption2"
+                    name="answerOptions"
+                    value="B"
+                    className="hidden"
+                    disabled
+                  />
                   <label
                     htmlFor="answerOption1"
                     className={`text-sm md:text-base text-slate-500 cursor-pointer flex w-full items-center justify-start ${
@@ -249,13 +286,20 @@ function Question() {
                           : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
-                      A
+                      B
                     </span>
                     <span>{dataDetail?.answer && dataDetail?.answer[1]}</span>
                   </label>
                 </div>
                 <div className="flex items-center mb-2">
-                  <input type="radio" id="answerOption3" name="answerOptions" value="C" className="hidden" disabled />
+                  <input
+                    type="radio"
+                    id="answerOption3"
+                    name="answerOptions"
+                    value="C"
+                    className="hidden"
+                    disabled
+                  />
                   <label
                     htmlFor="answerOption1"
                     className={`text-sm md:text-base text-slate-500 cursor-pointer flex w-full items-center justify-start ${
@@ -273,13 +317,20 @@ function Question() {
                           : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
-                      A
+                      C
                     </span>
                     <span>{dataDetail?.answer && dataDetail?.answer[2]}</span>
                   </label>
                 </div>
                 <div className="flex items-center mb-2">
-                  <input type="radio" id="answerOption4" name="answerOptions" value="D" className="hidden" disabled />
+                  <input
+                    type="radio"
+                    id="answerOption4"
+                    name="answerOptions"
+                    value="D"
+                    className="hidden"
+                    disabled
+                  />
                   <label
                     htmlFor="answerOption1"
                     className={`text-sm md:text-base text-slate-500 cursor-pointer flex w-full items-center justify-start ${
@@ -297,7 +348,7 @@ function Question() {
                           : "bg-purple-light text-white"
                       } h-8 w-8 flex justify-center items-center rounded-full p-4 me-4`}
                     >
-                      A
+                      D
                     </span>
                     <span>{dataDetail?.answer && dataDetail?.answer[3]}</span>
                   </label>

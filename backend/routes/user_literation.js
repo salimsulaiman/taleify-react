@@ -83,7 +83,7 @@ router.get("/literation_added/:userId", async (req, res) => {
 
 router.get("/literation_added_sorted/:userId", async (req, res) => {
   const userId = req.params.userId;
-  const sortOrder = req.query.sortOrder || "asc"; // Default to 'asc' if sortOrder is not provided
+  const sortOrder = req.query.sortOrder || "asc";
 
   try {
     let dataQuery = UserLiteration.find({ user: userId, status: 1 })
@@ -100,9 +100,9 @@ router.get("/literation_added_sorted/:userId", async (req, res) => {
       });
 
     if (sortOrder === "asc") {
-      dataQuery = dataQuery.sort({ createdAt: 1 }); // Sort by dateAdded in ascending order
+      dataQuery = dataQuery.sort({ createdAt: 1 });
     } else if (sortOrder === "desc") {
-      dataQuery = dataQuery.sort({ createdAt: -1 }); // Sort by dateAdded in descending order
+      dataQuery = dataQuery.sort({ createdAt: -1 });
     }
 
     const data = await dataQuery.exec();

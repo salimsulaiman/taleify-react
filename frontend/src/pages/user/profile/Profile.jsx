@@ -61,7 +61,7 @@ function Profile() {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
-      dispatch(getUserPointByUserId("6630b54ef222cc9adea02a33"));
+      dispatch(getUserPointByUserId(userId));
     }
   }, [dispatch, location]);
 
@@ -250,11 +250,7 @@ function Profile() {
                       {dataUser &&
                         dataUser
                           .sort((a, b) => {
-                            if (filter === "all") {
-                              return (
-                                new Date(a.createdAt) - new Date(b.createdAt)
-                              );
-                            } else if (filter === "new") {
+                            if (filter === "new") {
                               return (
                                 new Date(a.createdAt) - new Date(b.createdAt)
                               );
@@ -264,6 +260,33 @@ function Profile() {
                               );
                             } else {
                               return 0;
+                            }
+                          })
+                          .filter((ele) => {
+                            const totalProgress =
+                              data &&
+                              data.filter(
+                                (el) =>
+                                  el?.story?.literation?._id ===
+                                  ele?.literation?._id
+                              ).length;
+
+                            const progress =
+                              dataUserId &&
+                              dataUserId.filter(
+                                (el) =>
+                                  el?.question?.story?.literation ==
+                                  ele?.literation?._id
+                              ).length;
+
+                            if (filter === "all") {
+                              return true;
+                            } else if (filter === "finished") {
+                              return totalProgress === progress;
+                            } else if (filter === "notFinished") {
+                              return totalProgress !== progress;
+                            } else {
+                              return true;
                             }
                           })
                           .map((element) => {
