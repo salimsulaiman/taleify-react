@@ -8,6 +8,7 @@ import storyReducer from "../reducer/storyReducer";
 import questionReducer from "../reducer/questionReducer";
 import userAnswerReducer from "../reducer/userAnswerReducer";
 import userPointReducer from "../reducer/userPointReducer";
+import genreReducer from "../reducer/genreReducer";
 
 const allReducer = combineReducers({
   user: userReducer,
@@ -17,6 +18,7 @@ const allReducer = combineReducers({
   question: questionReducer,
   userAnswer: userAnswerReducer,
   userPoint: userPointReducer,
+  genre: genreReducer,
 });
 
 const store = createStore(allReducer, applyMiddleware(thunk));

@@ -18,13 +18,18 @@ import LiterationList from "../../../component/LiterationList";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getLiteration } from "../../../redux/action/literationAction";
+import { getGenre } from "../../../redux/action/genreAction";
 
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation()
+  const location = useLocation();
+
+  const [filterGenre, setFilterGenre] = useState("All");
 
   const { data, isLoading } = useSelector((state) => state.literation);
+  const dataGenre = useSelector((state) => state.genre.data);
+  const isLoadingGenre = useSelector((state) => state.genre.isLoading);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,6 +38,14 @@ function Home() {
       navigate("/user/signin");
     }
   }, []);
+
+  const setGenre = (filter) => {
+    setFilterGenre(filter);
+  };
+
+  useEffect(() => {
+    dispatch(getGenre());
+  }, [location]);
 
   useEffect(() => {
     dispatch(getLiteration());
@@ -43,11 +56,18 @@ function Home() {
       <section id="recomendation" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pt-5 md:px-9 md:pt-5 lg:px-9 lg:pt-5">
           <div className="w-full h-[150px] sm:h-[257px] bg-slate-500 rounded-lg overflow-hidden mt-20 sm:mt-24 relative">
-            <img src={Fantasy} alt="recomendation" className="object-bottom object-cover h-full w-full" />
+            <img
+              src={Fantasy}
+              alt="recomendation"
+              className="object-bottom object-cover h-full w-full"
+            />
             <div className="bg-black absolute z-10 right-0 left-0 bottom-0 top-0 p-5 flex flex-col justify-center sm:justify-end items-start bg-opacity-40 text-white">
-              <h2 className="text-lg sm:text-2xl line-clamp-2">Bridges of Unitiy: Guardian of One World</h2>
+              <h2 className="text-lg sm:text-2xl line-clamp-2">
+                Bridges of Unitiy: Guardian of One World
+              </h2>
               <h4 className="text-xs sm:text-base line-clamp-2">
-                Baca cerita Superhero pencipta kesatuan dan perdamaian di Taleify
+                Baca cerita Superhero pencipta kesatuan dan perdamaian di
+                Taleify
               </h4>
             </div>
           </div>
@@ -59,7 +79,9 @@ function Home() {
             <div className="h-12 w-[2px] bg-purple-dark rounded-lg me-2"></div>
             <div>
               <h2 className="text-base sm:text-2xl text-slate-700">Literasi</h2>
-              <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Populer</h2>
+              <h2 className="text-base sm:text-2xl text-slate-700 font-bold">
+                Populer
+              </h2>
             </div>
           </div>
           <div className="mt-8 flex items-center justify-center flex-col w-full min-h-[300px] relative">
@@ -112,16 +134,30 @@ function Home() {
               <div className="h-12 w-[2px] bg-purple-dark rounded-lg me-2"></div>
               <div>
                 <h2 className="text-base sm:text-2xl text-slate-700">Genre</h2>
-                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Populer</h2>
+                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">
+                  Populer
+                </h2>
               </div>
             </div>
             <ul className="hidden md:flex text-slate-500 text-base">
-              <li className="ms-5">Semua</li>
-              <li className="ms-5">Fiksi</li>
-              <li className="ms-5">Sejarah</li>
-              <li className="ms-5">Akademis</li>
-              <li className="ms-5">Romantis</li>
-              <li className="ms-5">Horror</li>
+              <li
+                className="ms-5 cursor-pointer hover:text-purple-semi-dark"
+                onClick={() => setGenre("All")}
+              >
+                Semua
+              </li>
+              {dataGenre &&
+                dataGenre.slice(0, 5).map((el) => {
+                  return (
+                    <li
+                      className="ms-5 cursor-pointer hover:text-purple-semi-dark"
+                      key={el._id}
+                      onClick={() => setGenre(`${el.name}`)}
+                    >
+                      {el.name}
+                    </li>
+                  );
+                })}
             </ul>
             <select
               defaultValue={"Semua"}
@@ -148,10 +184,26 @@ function Home() {
                 rating={null}
                 slug={null}
               />
+            ) : data &&
+              (filterGenre === "All"
+                ? data
+                : data.filter((el) => el.genre?.name === filterGenre)
+              ).length === 0 ? (
+              <div className="w-full flex justify-center items-center col-span-12 min-h-32">
+                <p className="text-center text-slate-600 font-medium text-xl">
+                  Literasi tidak ditemukan
+                </p>
+              </div>
             ) : (
-              data &&
-              data.map((element) => {
-                return (
+              data
+                .filter((el) => {
+                  if (filterGenre === "All") {
+                    return true;
+                  } else {
+                    return el.genre?.name === filterGenre;
+                  }
+                })
+                .map((element) => (
                   <div key={element._id}>
                     <LiterationList
                       id={element._id}
@@ -163,8 +215,7 @@ function Home() {
                       slug={element.slug}
                     />
                   </div>
-                );
-              })
+                ))
             )}
           </div>
         </div>
