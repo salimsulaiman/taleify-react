@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  getLiterationAdded,
-  getLiterationByUserId,
-} from "../../../../redux/action/literationAddedAction";
+import { getLiterationAdded, getLiterationByUserId } from "../../../../redux/action/literationAddedAction";
 import { userData } from "../../../../redux/action/userAction";
 import LiterationList from "../../../../component/LiterationList";
 import { getGenre } from "../../../../redux/action/genreAction";
@@ -16,9 +13,7 @@ function UserLiteration() {
 
   const [filterGenre, setFilterGenre] = useState("All");
 
-  const { dataUser, isLoadingUser } = useSelector(
-    (state) => state.literationAdded
-  );
+  const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
 
   const user = useSelector((state) => state.user.data);
 
@@ -57,17 +52,15 @@ function UserLiteration() {
             <div className="flex items-center">
               <div className="h-12 w-[2px] bg-purple-dark rounded-lg me-2"></div>
               <div>
-                <h2 className="text-base sm:text-2xl text-slate-700">
-                  Koleksi
-                </h2>
-                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">
-                  Literasi
-                </h2>
+                <h2 className="text-base sm:text-2xl text-slate-700">Koleksi</h2>
+                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Literasi</h2>
               </div>
             </div>
             <ul className="hidden md:flex text-slate-500 text-base">
               <li
-                className="ms-5 cursor-pointer hover:text-purple-semi-dark"
+                className={`ms-5 cursor-pointer ${
+                  filterGenre === "All" ? "text-purple-semi-dark font-bold" : "hover:text-purple-semi-dark"
+                }`}
                 onClick={() => setGenre("All")}
               >
                 Semua
@@ -76,7 +69,9 @@ function UserLiteration() {
                 dataGenre.slice(0, 5).map((el) => {
                   return (
                     <li
-                      className="ms-5 cursor-pointer hover:text-purple-semi-dark"
+                      className={`ms-5 cursor-pointer ${
+                        filterGenre === el.name ? "text-purple-semi-dark font-bold" : "hover:text-purple-semi-dark"
+                      }`}
                       key={el._id}
                       onClick={() => setGenre(`${el.name}`)}
                     >
@@ -115,16 +110,10 @@ function UserLiteration() {
                 slug={null}
               />
             ) : dataUser &&
-              (filterGenre == "All"
-                ? dataUser
-                : dataUser.filter(
-                    (el) => el.literation?.genre?.name === filterGenre
-                  )
-              ).length === 0 ? (
+              (filterGenre == "All" ? dataUser : dataUser.filter((el) => el.literation?.genre?.name === filterGenre))
+                .length === 0 ? (
               <div className="w-full flex justify-center items-center col-span-12 min-h-32">
-                <p className="text-center text-slate-600 font-medium text-xl">
-                  Literasi tidak ditemukan
-                </p>
+                <p className="text-center text-slate-600 font-medium text-xl">Literasi tidak ditemukan</p>
               </div>
             ) : (
               dataUser &&

@@ -134,4 +134,24 @@ router.post("/signin", async (req, res) => {
   });
 });
 
+router.put("/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(id, {
+      name,
+      email,
+      picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
+    }).then(
+      res.status(200).json({
+        status: res.statusCode,
+        message: "Success",
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;

@@ -38,8 +38,8 @@ const NavApp = () => {
   };
   const handleSearch = (e) => {
     e.preventDefault();
-    setSearch("");
     navigate(`/user/literations/search?title=${stringToSlug(search)}`);
+    setSearch(""); // Clear the input field
     document.getElementById("searchModal").close();
   };
 
@@ -114,7 +114,7 @@ const NavApp = () => {
                 className="w-full min-h-full focus:outline-0 text-slate-500"
                 placeholder="Search..."
                 autoFocus
-                defaultValue={searchQuery}
+                value={search}
                 onChange={handleSearchInputChange}
               />
               <FaSearch

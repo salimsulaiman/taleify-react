@@ -1,4 +1,4 @@
-import { FETCH_DATA, LOGIN_ERROR, USER_DATA, LOGIN_USER, LOGOUT_USER } from "../action/userAction";
+import { FETCH_DATA, LOGIN_ERROR, USER_DATA, LOGIN_USER, LOGOUT_USER, UPDATE_USER_DATA } from "../action/userAction";
 
 const initialState = {
   data: [],
@@ -29,6 +29,11 @@ function userReducer(state = initialState, action) {
         ...state,
         data: action.payload,
         isLoading: false,
+      };
+    case UPDATE_USER_DATA:
+      return {
+        ...state,
+        data: action.payload,
       };
     default:
       return state;

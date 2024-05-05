@@ -6,6 +6,7 @@ export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGOUT_USER = "LOGOUT_USER";
 export const SUCCESS_SIGNUP = "SUCCESS_SIGNUP";
 export const USER_DATA = "USER_DATA";
+export const UPDATE_USER_DATA = "UPDATE_USER_DATA";
 
 export function fetchData() {
   return {
@@ -29,6 +30,13 @@ export function loginError() {
 export function successSignup(data) {
   return {
     type: SUCCESS_SIGNUP,
+    payload: data,
+  };
+}
+
+export function successUpdateUser(data) {
+  return {
+    type: UPDATE_USER_DATA,
     payload: data,
   };
 }
@@ -87,6 +95,30 @@ export function logoutUser() {
       dispatch({ type: LOGOUT_USER });
     } catch (error) {
       console.error("Error logging out:", error);
+    }
+  };
+}
+
+export function updateUser(id, name, email) {
+  return async (dispatch) => {
+    const header = {
+      authuser: "Bearer" + " " + localStorage.getItem("token"),
+    };
+    try {
+      const result = await axios.put(
+        `http://localhost:3030/user/${id}`,
+        {
+          name: name,
+          email: email,
+        },
+        {
+          headers: header,
+        }
+      );
+
+      dispatch(successUpdateUser(result.data));
+    } catch (error) {
+      console.log(error);
     }
   };
 }
