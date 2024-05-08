@@ -7,6 +7,7 @@ export const LOGOUT_USER = "LOGOUT_USER";
 export const SUCCESS_SIGNUP = "SUCCESS_SIGNUP";
 export const USER_DATA = "USER_DATA";
 export const UPDATE_USER_DATA = "UPDATE_USER_DATA";
+export const UPDATE_PASSWORD_USER = "UPDATE_PASSWORD_USER";
 
 export function fetchData() {
   return {
@@ -37,6 +38,12 @@ export function successSignup(data) {
 export function successUpdateUser(data) {
   return {
     type: UPDATE_USER_DATA,
+    payload: data,
+  };
+}
+export function successUpdatePasswordUser(data) {
+  return {
+    type: UPDATE_PASSWORD_USER,
     payload: data,
   };
 }
@@ -119,6 +126,30 @@ export function updateUser(id, name, email) {
       dispatch(successUpdateUser(result.data));
     } catch (error) {
       console.log(error);
+    }
+  };
+}
+
+export function updatePasswordUser(id, oldPassword, newPassword) {
+  return async (dispatch) => {
+    const header = {
+      authuser: "Bearer" + " " + localStorage.getItem("token"),
+    };
+    try {
+      const result = await axios.put(
+        `http://localhost:3030/user/changePassword/${id}`,
+        {
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        },
+        {
+          headers: header,
+        }
+      );
+
+      dispatch(successUpdatePasswordUser(result.data));
+    } catch (error) {
+      throw error;
     }
   };
 }

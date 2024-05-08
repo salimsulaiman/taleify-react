@@ -22,7 +22,9 @@ router.get("/", async (req, res) => {
 router.get("/userdetail", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const data = await User.findById(userId).select("_id name email picture createdAt updatedAt");
+    const data = await User.findById(userId).select(
+      "_id name email picture createdAt updatedAt"
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -34,7 +36,9 @@ router.get("/userdetail", verifyToken, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const data = await User.findById(req.params.id).select("_id name email picture createdAt updatedAt");
+    const data = await User.findById(req.params.id).select(
+      "_id name email picture createdAt updatedAt"
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -143,6 +147,43 @@ router.put("/:id", verifyToken, async (req, res) => {
       name,
       email,
       picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
+    }).then(
+      res.status(200).json({
+        status: res.statusCode,
+        message: "Success",
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.put("/changePassword/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { oldPassword, newPassword } = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(newPassword, salt);
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: res.statusCode, message: "User not found" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ status: res.statusCode, message: "Password does not match" });
+    }
+
+    await User.findByIdAndUpdate(id, {
+      password: hashPassword,
     }).then(
       res.status(200).json({
         status: res.statusCode,

@@ -21,12 +21,16 @@ function SignIn() {
 
     await dispatch(loginUser(email, password));
 
+    setErrorAlert(false);
+
     // Cek apakah ada kesalahan setelah login, jika ada tampilkan pesan kesalahan
 
     const token = localStorage.getItem("token");
     if (token) {
       // Jika berhasil login, arahkan ke halaman beranda
       navigate("/user/home");
+    } else {
+      setErrorAlert(true);
     }
   };
 
@@ -45,9 +49,15 @@ function SignIn() {
           </div>
         </div>
         <div className="w-full md:w-1/2 ms-2.5 flex justify-center flex-col">
-          <h1 className="text-[32px] text-purple-semi-dark font-bold mb-2">Teleify</h1>
-          <h2 className="text-2xl text-slate-600 font-medium mb-3">Hello, Pengguna</h2>
-          <h4 className="text-[16px] text-slate-500 mb-5">Selamat datang, silahkan login untuk melanjutkan</h4>
+          <h1 className="text-[32px] text-purple-semi-dark font-bold mb-2">
+            Teleify
+          </h1>
+          <h2 className="text-2xl text-slate-600 font-medium mb-3">
+            Hello, Pengguna
+          </h2>
+          <h4 className="text-[16px] text-slate-500 mb-5">
+            Selamat datang, silahkan login untuk melanjutkan
+          </h4>
           <form onSubmit={login}>
             <div className="mb-4">
               <div className="relative mb-6">
@@ -82,8 +92,11 @@ function SignIn() {
               </div>
             </div>
 
-            {error ? (
-              <div role="alert" className="alert alert-error mb-4 text-white p-2 text-sm">
+            {errorAlert == true ? (
+              <div
+                role="alert"
+                className="alert alert-error mb-4 text-white p-2 text-sm"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="stroke-current shrink-0 h-6 w-6"
@@ -110,7 +123,9 @@ function SignIn() {
             >
               {isLoading && isLoading ? "Loading" : "Masuk"}
             </button>
-            <h4 className="text-slate-600 mt-4 text-center">Belum punya akun?</h4>
+            <h4 className="text-slate-600 mt-4 text-center">
+              Belum punya akun?
+            </h4>
           </form>
           <Link
             to={"/user/signup"}
