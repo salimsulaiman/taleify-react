@@ -2,10 +2,21 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const User = require("../models/User");
 const { verifyToken } = require("./verifytoken");
 const UserPoint = require("../models/UserPoint");
+const UserOTPVerification = require("../models/UserOtpVerification");
+
+// nodemailer
+let transporter = nodemailer.createTransport({
+  host: "smtp-mail.outlook.com",
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.AUTH_PASS,
+  },
+});
 
 router.get("/", async (req, res) => {
   try {
@@ -22,9 +33,7 @@ router.get("/", async (req, res) => {
 router.get("/userdetail", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const data = await User.findById(userId).select(
-      "_id name email picture createdAt updatedAt"
-    );
+    const data = await User.findById(userId).select("_id name email picture createdAt updatedAt");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -36,9 +45,7 @@ router.get("/userdetail", verifyToken, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const data = await User.findById(req.params.id).select(
-      "_id name email picture createdAt updatedAt"
-    );
+    const data = await User.findById(req.params.id).select("_id name email picture createdAt updatedAt");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -54,28 +61,30 @@ const checkEmailExist = async (email) => {
 };
 
 // register
+// register
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
-  // check if email already exist
+  // check if email already exists
   const emailExist = await checkEmailExist(email);
 
   if (emailExist) {
     return res.status(400).json({ message: "Email already exists" });
   }
-  // hash password
-
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(password, salt);
-
-  const user = new User({
-    name,
-    email,
-    password: hashPassword,
-    picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
-  });
 
   try {
+    // hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      name,
+      email,
+      password: hashPassword,
+      picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
+      verified: false,
+    });
+
     const saveUser = await user.save();
 
     if (saveUser) {
@@ -87,7 +96,13 @@ router.post("/signup", async (req, res) => {
 
       const saveUserPoint = await userPoint.save();
 
-      res.json({ user: saveUser, saveUserPoint });
+      // Call function to send OTP verification email
+      if (saveUserPoint) {
+        await sendOTPVerificationEmail({ _id: userId, email: email });
+      }
+
+      // Send response after all async operations are completed
+      res.status(200).json({ user: saveUser, saveUserPoint });
     }
   } catch (error) {
     res.status(400).json({
@@ -95,6 +110,120 @@ router.post("/signup", async (req, res) => {
     });
   }
 });
+
+router.post("/verifyOTP", async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+    if (!userId || !otp) {
+      throw Error("Empty otp details are not allowed");
+    } else {
+      const UserOTPVerificationRecords = await UserOTPVerification.find({
+        userId,
+      });
+      if (UserOTPVerificationRecords.length <= 0) {
+        throw Error("Account record doesn't exist or has been verified already. Please sign up or login");
+      } else {
+        const { expiredAt } = UserOTPVerificationRecords[0];
+        const hashOTP = UserOTPVerificationRecords[0].otp;
+
+        if (expiredAt < Date.now()) {
+          await UserOTPVerification.deleteMany({ userId });
+          throw new Error("Code has expired. Please request again.");
+        } else {
+          const validOTP = await bcrypt.compare(otp, hashOTP);
+          if (!validOTP) {
+            throw new Error("Invalid code passed. Check your inbox");
+          } else {
+            await User.updateOne(
+              {
+                _id: userId,
+              },
+              {
+                verified: true,
+              }
+            );
+            await UserOTPVerification.deleteMany({ userId });
+            res.json({
+              status: "VERIFIED",
+              message: "User email verified successfully",
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    res.json({
+      status: "FAILED",
+      message: error.message,
+    });
+  }
+});
+
+router.post("/resendOTPVerificationCode", async (req, res) => {
+  try {
+    let { userId, email } = req.body;
+
+    if (!userId || !email) {
+      throw Error("Empty user details are not allowed");
+    } else {
+      await UserOTPVerification.deleteMany({ userId });
+      sendOTPVerificationEmail({ _id: userId, email }, res);
+
+      res.json({
+        status: "SUCCESS",
+        message: "Email sent successfully",
+      });
+    }
+  } catch (error) {
+    res.json({
+      status: "FAILED",
+      message: error.message,
+    });
+  }
+});
+
+// router.post("/signup", async (req, res) => {
+//   const { name, email, password } = req.body;
+
+//   // check if email already exist
+//   const emailExist = await checkEmailExist(email);
+
+//   if (emailExist) {
+//     return res.status(400).json({ message: "Email already exists" });
+//   }
+//   // hash password
+
+//   const salt = await bcrypt.genSalt(10);
+//   const hashPassword = await bcrypt.hash(password, salt);
+
+//   const user = new User({
+//     name,
+//     email,
+//     password: hashPassword,
+//     picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
+//     verified: false,
+//   });
+
+//   try {
+//     const saveUser = await user.save();
+
+//     if (saveUser) {
+//       const userId = saveUser._id;
+//       const userPoint = new UserPoint({
+//         user: userId,
+//         point: 0,
+//       });
+
+//       const saveUserPoint = await userPoint.save();
+
+//       res.json({ user: saveUser, saveUserPoint });
+//     }
+//   } catch (error) {
+//     res.status(400).json({
+//       message: "Failed to register",
+//     });
+//   }
+// });
 
 // login
 router.post("/signin", async (req, res) => {
@@ -169,17 +298,13 @@ router.put("/changePassword/:id", verifyToken, async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ status: res.statusCode, message: "User not found" });
+      return res.status(404).json({ status: res.statusCode, message: "User not found" });
     }
 
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordMatch) {
-      return res
-        .status(400)
-        .json({ status: res.statusCode, message: "Password does not match" });
+      return res.status(400).json({ status: res.statusCode, message: "Password does not match" });
     }
 
     await User.findByIdAndUpdate(id, {
@@ -194,5 +319,34 @@ router.put("/changePassword/:id", verifyToken, async (req, res) => {
     console.log(error);
   }
 });
+
+const sendOTPVerificationEmail = async ({ _id, email }) => {
+  try {
+    const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+    // mail option
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: email,
+      subject: "Verify Your Email",
+      html: `<p>Enter ${otp} in the app to verify your email address</p><p>This code <b>expires in 1 hour</b>.</p>`,
+    };
+
+    // hash the otp
+    const saltRounds = 10;
+    const hashOTP = await bcrypt.hash(otp, saltRounds);
+    const newOTPVerification = await new UserOTPVerification({
+      userId: _id,
+      otp: hashOTP,
+      createdAt: Date.now(),
+      expiredAt: Date.now() + 3600000,
+    });
+
+    // save otp record
+    await newOTPVerification.save();
+    transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Failed to send verification email:", error);
+  }
+};
 
 module.exports = router;
