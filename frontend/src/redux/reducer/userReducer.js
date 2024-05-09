@@ -6,10 +6,14 @@ import {
   LOGOUT_USER,
   UPDATE_USER_DATA,
   UPDATE_PASSWORD_USER,
+  SUCCESS_SIGNUP,
+  GET_USER_BY_EMAIL,
 } from "../action/userAction";
 
 const initialState = {
   data: [],
+  dataByEmail: [],
+  dataSignup: [],
   dataPassword: [],
   isLoading: false,
   error: false,
@@ -33,10 +37,21 @@ function userReducer(state = initialState, action) {
         ...state,
         error: true,
       };
+    case SUCCESS_SIGNUP:
+      return {
+        ...state,
+        dataSignup: action.payload,
+      };
     case USER_DATA:
       return {
         ...state,
         data: action.payload,
+        isLoading: false,
+      };
+    case GET_USER_BY_EMAIL:
+      return {
+        ...state,
+        dataByEmail: action.payload,
         isLoading: false,
       };
     case UPDATE_USER_DATA:

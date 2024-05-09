@@ -6,6 +6,7 @@ export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGOUT_USER = "LOGOUT_USER";
 export const SUCCESS_SIGNUP = "SUCCESS_SIGNUP";
 export const USER_DATA = "USER_DATA";
+export const GET_USER_BY_EMAIL = "GET_USER_BY_EMAIL";
 export const UPDATE_USER_DATA = "UPDATE_USER_DATA";
 export const UPDATE_PASSWORD_USER = "UPDATE_PASSWORD_USER";
 
@@ -18,6 +19,12 @@ export function fetchData() {
 export function getUserData(data) {
   return {
     type: USER_DATA,
+    payload: data,
+  };
+}
+export function successGetUserDataByEmail(data) {
+  return {
+    type: GET_USER_BY_EMAIL,
     payload: data,
   };
 }
@@ -65,6 +72,18 @@ export function userData() {
   };
 }
 
+export function getUserByEmail(email) {
+  return async (dispatch) => {
+    dispatch(fetchData());
+    try {
+      const result = await axios.get(`http://localhost:3030/user/get_user/search?email=${email}`);
+      dispatch(successGetUserDataByEmail(result.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
 export function loginUser(email, password) {
   return async (dispatch) => {
     try {
@@ -89,8 +108,9 @@ export function registerUser(name, email, password) {
       });
 
       dispatch(successSignup(result.data));
+      return result.data;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 }

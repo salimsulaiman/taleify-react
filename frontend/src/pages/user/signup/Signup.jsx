@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import {
-  EnvelopeIcon,
-  LockClosedIcon,
-  UserIcon,
-} from "@heroicons/react/16/solid";
+import { EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/16/solid";
 import Bubble from "../../../assets/image/buble.png";
 import Register from "../../../assets/image/register.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../../redux/action/userAction";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -14,12 +12,28 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log(name);
-    console.log(email);
-    console.log(password);
-    console.log(confirmPassword);
+    if (password != confirmPassword) {
+      alert("Password tidak sinkron");
+    } else {
+      dispatch(registerUser(name, email, password))
+        .then((response) => {
+          navigate(`/user/signup/verification?email=${email}`);
+        })
+        .catch((error) => {
+          if (error.response.data.status == "EXIST") {
+            alert("Email telah terdaftar sebelumnya");
+          }
+        });
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
   };
   return (
     <div
@@ -39,15 +53,9 @@ function Signup() {
           </div>
         </div>
         <div className="w-full md:w-1/2 ms-2.5 flex justify-center flex-col">
-          <h1 className="text-[32px] text-purple-semi-dark font-bold mb-2">
-            Teleify
-          </h1>
-          <h2 className="text-2xl text-slate-600 font-medium mb-3">
-            Bergabung bersama kami
-          </h2>
-          <h4 className="text-[16px] text-slate-500 mb-5">
-            Segera daftar untuk menikmati fitur kami
-          </h4>
+          <h1 className="text-[32px] text-purple-semi-dark font-bold mb-2">Teleify</h1>
+          <h2 className="text-2xl text-slate-600 font-medium mb-3">Bergabung bersama kami</h2>
+          <h4 className="text-[16px] text-slate-500 mb-5">Segera daftar untuk menikmati fitur kami</h4>
           <form onSubmit={handleRegister}>
             <div className="mb-4">
               <div className="relative mb-6">
@@ -116,9 +124,7 @@ function Signup() {
             >
               Daftar
             </button>
-            <h4 className="text-slate-600 mt-4 text-center">
-              Sudah punya akun?
-            </h4>
+            <h4 className="text-slate-600 mt-4 text-center">Sudah punya akun?</h4>
           </form>
           <Link
             to={"/user/signin"}

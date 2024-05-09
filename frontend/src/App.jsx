@@ -12,18 +12,10 @@ import Story from "./pages/user/literations/story/Story";
 import Question from "./pages/user/literations/question/Question";
 import UserLiteration from "./pages/user/literations/user_literation/UserLiteration";
 import SearchLiteration from "./pages/user/literations/search/SearchLiteration";
+import Verification from "./pages/user/signup/Verification";
 
 function App() {
   return (
-    // <Routes>
-    //   <Route path="/" element={<Dashboard />} />
-    //   <Route path="/user/signin" element={<SignIn />} />
-    //   <Route path="/user/signup" element={<Signup />} />
-    //   <Route path="/user/home" element={<Home />} />
-    //   <Route path="/user/profile" element={<Profile />} />
-    //   <Route path="/user/literations/:id" element={<Literations />} />
-    //   <Route path="/artikel" element={<Article />} />
-    // </Routes>
     <>
       <Routes>
         <Route path="/" element={<Dashboard />} />
@@ -40,6 +32,7 @@ function App() {
         </Route>
         <Route path="/user/signin" element={<SignIn />} />
         <Route path="/user/signup" element={<Signup />} />
+        <Route path="/user/signup/verification" element={<Verification />} />
       </Routes>
     </>
   );

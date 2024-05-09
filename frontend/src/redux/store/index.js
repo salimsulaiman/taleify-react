@@ -9,6 +9,7 @@ import questionReducer from "../reducer/questionReducer";
 import userAnswerReducer from "../reducer/userAnswerReducer";
 import userPointReducer from "../reducer/userPointReducer";
 import genreReducer from "../reducer/genreReducer";
+import verifyCodeReducer from "../reducer/verificationReducer";
 
 const allReducer = combineReducers({
   user: userReducer,
@@ -19,6 +20,7 @@ const allReducer = combineReducers({
   userAnswer: userAnswerReducer,
   userPoint: userPointReducer,
   genre: genreReducer,
+  verifyCode: verifyCodeReducer,
 });
 
 const store = createStore(allReducer, applyMiddleware(thunk));

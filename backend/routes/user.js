@@ -54,13 +54,31 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
+router.get("/get_user/search", async (req, res) => {
+  const { email } = req.query;
+  try {
+    const data = await User.findOne({ email: email });
+
+    if (!data) {
+      return res.status(404).json({
+        status: res.statusCode,
+        message: "Email not found",
+      });
+    }
+    return res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({
+      status: res.statusCode,
+      message: "Error Bos",
+    });
+  }
+});
 
 const checkEmailExist = async (email) => {
   const emailExist = await User.findOne({ email });
   return emailExist !== null;
 };
 
-// register
 // register
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
@@ -69,7 +87,7 @@ router.post("/signup", async (req, res) => {
   const emailExist = await checkEmailExist(email);
 
   if (emailExist) {
-    return res.status(400).json({ message: "Email already exists" });
+    return res.status(400).json({ status: "EXIST", message: "Email already exists" });
   }
 
   try {
@@ -115,24 +133,24 @@ router.post("/verifyOTP", async (req, res) => {
   try {
     const { userId, otp } = req.body;
     if (!userId || !otp) {
-      throw Error("Empty otp details are not allowed");
+      throw Error("Harap masukan kode otp");
     } else {
       const UserOTPVerificationRecords = await UserOTPVerification.find({
         userId,
       });
       if (UserOTPVerificationRecords.length <= 0) {
-        throw Error("Account record doesn't exist or has been verified already. Please sign up or login");
+        throw Error("Akun tidak tersedia atau mungkin telah terverifikasi. Silahkan daftar atau masuk ke dalam akun");
       } else {
         const { expiredAt } = UserOTPVerificationRecords[0];
         const hashOTP = UserOTPVerificationRecords[0].otp;
 
         if (expiredAt < Date.now()) {
           await UserOTPVerification.deleteMany({ userId });
-          throw new Error("Code has expired. Please request again.");
+          throw new Error("Kode telah kadaluarsa. Silahkan kirim ulang kode verifikasi.");
         } else {
           const validOTP = await bcrypt.compare(otp, hashOTP);
           if (!validOTP) {
-            throw new Error("Invalid code passed. Check your inbox");
+            throw new Error("Kode verifikasi tidak sesuai. Silahkan cek email");
           } else {
             await User.updateOne(
               {
@@ -145,7 +163,7 @@ router.post("/verifyOTP", async (req, res) => {
             await UserOTPVerification.deleteMany({ userId });
             res.json({
               status: "VERIFIED",
-              message: "User email verified successfully",
+              message: "Verifikasi akun berhasil",
             });
           }
         }
@@ -181,49 +199,6 @@ router.post("/resendOTPVerificationCode", async (req, res) => {
     });
   }
 });
-
-// router.post("/signup", async (req, res) => {
-//   const { name, email, password } = req.body;
-
-//   // check if email already exist
-//   const emailExist = await checkEmailExist(email);
-
-//   if (emailExist) {
-//     return res.status(400).json({ message: "Email already exists" });
-//   }
-//   // hash password
-
-//   const salt = await bcrypt.genSalt(10);
-//   const hashPassword = await bcrypt.hash(password, salt);
-
-//   const user = new User({
-//     name,
-//     email,
-//     password: hashPassword,
-//     picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
-//     verified: false,
-//   });
-
-//   try {
-//     const saveUser = await user.save();
-
-//     if (saveUser) {
-//       const userId = saveUser._id;
-//       const userPoint = new UserPoint({
-//         user: userId,
-//         point: 0,
-//       });
-
-//       const saveUserPoint = await userPoint.save();
-
-//       res.json({ user: saveUser, saveUserPoint });
-//     }
-//   } catch (error) {
-//     res.status(400).json({
-//       message: "Failed to register",
-//     });
-//   }
-// });
 
 // login
 router.post("/signin", async (req, res) => {
