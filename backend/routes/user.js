@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 router.get("/userdetail", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const data = await User.findById(userId).select("_id name email picture createdAt updatedAt");
+    const data = await User.findById(userId).select("_id name email picture verified createdAt updatedAt");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -45,7 +45,7 @@ router.get("/userdetail", verifyToken, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const data = await User.findById(req.params.id).select("_id name email picture createdAt updatedAt");
+    const data = await User.findById(req.params.id).select("_id name email picture verified createdAt updatedAt");
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({

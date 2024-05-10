@@ -19,6 +19,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getLiteration } from "../../../redux/action/literationAction";
 import { getGenre } from "../../../redux/action/genreAction";
+import { IoCloseCircle } from "react-icons/io5";
+import { userData } from "../../../redux/action/userAction";
 
 function Home() {
   const navigate = useNavigate();
@@ -26,10 +28,16 @@ function Home() {
   const location = useLocation();
 
   const [filterGenre, setFilterGenre] = useState("All");
+  const [closeToast, setCloseToast] = useState(false);
 
+  const user = useSelector((state) => state.user.data);
   const { data, isLoading } = useSelector((state) => state.literation);
   const dataGenre = useSelector((state) => state.genre.data);
   const isLoadingGenre = useSelector((state) => state.genre.isLoading);
+
+  useEffect(() => {
+    dispatch(userData());
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,8 +59,32 @@ function Home() {
     dispatch(getLiteration());
   }, [location]);
 
+  const closeToastHandler = () => {
+    setCloseToast(true);
+  };
+
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-24 md:pb-0">
+      <div
+        className={`toast z-10 w-full md:w-1/3 toast-center toast-middle sm:toast-end sm:toast-bottom ${
+          closeToast ? "hidden" : "block"
+        }`}
+      >
+        {user && user?.verified ? (
+          <div></div>
+        ) : (
+          <div className="alert bg-rose-500 bg-opacity-75 hover:bg-opacity-100 p-6 border-none block relative">
+            <IoCloseCircle
+              className="absolute text-white hover:text-slate-100 text-2xl right-2 top-2 cursor-pointer"
+              onClick={closeToastHandler}
+            />
+            <h3 className="text-white text-base mb-2 font-semibold">Akun Belum Aktif</h3>
+            <h3 className="text-white text-sm mb-3">Klik tombol dibawah ini untuk mengaktifkan akun</h3>
+            <button className="bg-white hover:bg-slate-100 text-slate-700 px-4 py-1 rounded-lg">Aktivasi</button>
+          </div>
+        )}
+      </div>
+
       <section id="recomendation" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pt-5 md:px-9 md:pt-5 lg:px-9 lg:pt-5">
           <div className="w-full h-[150px] sm:h-[257px] bg-slate-500 rounded-lg overflow-hidden mt-20 sm:mt-24 relative">

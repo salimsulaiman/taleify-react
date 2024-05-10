@@ -64,12 +64,16 @@ function Literations() {
 
   const addLiteration = () => {
     const userId = localStorage.getItem("userId");
-    if (userId && dataDetail?._id) {
-      dispatch(addUserLiteration(userId, dataDetail?._id)).then(() => {
-        dispatch(userData());
-      });
-      dispatch(getLiterationById(id));
-      dispatch(getLiteration());
+    if (user && user?.verified == false) {
+      alert("Harap verifikasi terlebih dahulu akun anda");
+    } else {
+      if (userId && dataDetail?._id) {
+        dispatch(addUserLiteration(userId, dataDetail?._id)).then(() => {
+          dispatch(userData());
+        });
+        dispatch(getLiterationById(id));
+        dispatch(getLiteration());
+      }
     }
   };
 

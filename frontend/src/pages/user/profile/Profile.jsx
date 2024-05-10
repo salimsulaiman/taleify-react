@@ -136,7 +136,13 @@ function Profile() {
                     </div>
                   </div>
                   {user && <h1 className="text-slate-500 font-semibold mb-4">{user.name}</h1>}
-                  <div className="badge bg-emerald-100 text-emerald-500 p-3 rounded-lg mb-4">Aktif</div>
+                  <div
+                    className={`badge font-bold ${
+                      user?.verified ? "bg-emerald-100 text-emerald-500" : "bg-red-100 text-red-400"
+                    } p-3 rounded-lg mb-4`}
+                  >
+                    {user?.verified ? "Aktif" : "Belum Aktif"}
+                  </div>
                   <form className="w-full" onSubmit={handleUpdateUser}>
                     <div className="form-group w-full relative mb-3">
                       <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="name">
