@@ -9,10 +9,10 @@ import { getLiteration, getLiterationById } from "../../../redux/action/literati
 import ImageLoad from "../../../assets/image/imageload.png";
 import {
   addUserLiteration,
-  deleteUserLiteration,
   getLiterationAddedById,
+  updateUserLiteration,
 } from "../../../redux/action/literationAddedAction";
-import { userData } from "../../../redux/action/userAction";
+import { getUserData, userData } from "../../../redux/action/userAction";
 
 function Literations() {
   const { id } = useParams();
@@ -68,26 +68,43 @@ function Literations() {
       alert("Harap verifikasi terlebih dahulu akun anda");
     } else {
       if (userId && dataDetail?._id) {
-        dispatch(addUserLiteration(userId, dataDetail?._id)).then(() => {
-          dispatch(userData());
-        });
-        dispatch(getLiterationById(id));
-        dispatch(getLiteration());
+        if (literationAdded && literationAdded != null && literationAdded[0]?.status == 0) {
+          const idLiterationAdded = literationAdded[0]?._id;
+          dispatch(updateUserLiteration(idLiterationAdded, 1)).then(() => {
+            dispatch(getLiterationAddedById(userId, id));
+            dispatch(userData());
+            dispatch(getLiterationById(id));
+            dispatch(getLiteration());
+          });
+        } else {
+          dispatch(addUserLiteration(userId, dataDetail?._id)).then(() => {
+            dispatch(getLiterationAddedById(userId, id));
+            dispatch(userData());
+            dispatch(getLiterationById(id));
+            dispatch(getLiteration());
+          });
+        }
       }
     }
   };
 
   const deleteLiteration = () => {
     alert("Berhasil dihapus");
+    const userId = localStorage.getItem("userId");
     const idLiterationAdded = literationAdded[0]?._id;
-    dispatch(deleteUserLiteration(idLiterationAdded));
-    dispatch(userData());
-    dispatch(getLiterationById(id));
-    dispatch(getLiteration());
+    if (userId && dataDetail?._id) {
+      dispatch(updateUserLiteration(idLiterationAdded, 0)).then(() => {
+        dispatch(getLiterationAddedById(userId, id));
+        dispatch(userData());
+        dispatch(getLiterationById(id));
+        dispatch(getLiteration());
+      });
+    }
   };
 
   return (
     <main className="w-full min-h-screen bg-white font-poppins">
+      {console.log(literationAdded)}
       <section id="literarion-item" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pb-5 pt-14">
           <div className="w-full bg-slate-100 border-2 border-slate-200 min-h-[343px] mt-[193px] relative rounded-lg p-4">
@@ -145,7 +162,10 @@ function Literations() {
                 )}
 
                 <div className="flex static lg:absolute -top-10">
-                  {!isLoadingLiteration && literationAdded && literationAdded != null ? (
+                  {!isLoadingLiteration &&
+                  literationAdded &&
+                  literationAdded != null &&
+                  literationAdded[0]?.status == 1 ? (
                     <div className="flex w-full">
                       <button
                         className="bg-gradient-to-r from-purple-light to-purple-semi-dark text-white px-4 py-2 rounded-md cursor-pointer text-sm md:text-base me-4 flex-grow sm:flex-grow-0"

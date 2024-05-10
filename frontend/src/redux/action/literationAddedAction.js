@@ -89,11 +89,11 @@ export function addUserLiteration(userId, literationId) {
   };
 }
 
-export function deleteUserLiteration(id) {
+export function updateUserLiteration(id, status) {
   return async (dispatch) => {
     try {
       const response = await axios.put(`http://localhost:3030/user_literation/literation_added/${id}`, {
-        status: 0,
+        status: status,
       });
 
       if (response.status == 200) {
