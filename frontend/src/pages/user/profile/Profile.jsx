@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import NavApp from "../../../component/NavApp";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import Resizer from "react-image-file-resizer";
 import { updatePasswordUser, updateUser, userData } from "../../../redux/action/userAction";
 
 import { ArrowLeftCircleIcon, PencilIcon, StarIcon } from "@heroicons/react/16/solid";
@@ -14,6 +15,7 @@ import { getLiterationByUserId } from "../../../redux/action/literationAddedActi
 import { getQuestion } from "../../../redux/action/questionAction";
 import { getUserAnswerByUserId } from "../../../redux/action/userAnswerAction";
 import { getUserPointByUserId } from "../../../redux/action/userPointAction";
+import axios from "axios";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -25,6 +27,7 @@ function Profile() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [errorPass, setErrorPass] = useState(false);
+  const [file, setFile] = useState(null);
 
   const user = useSelector((state) => state.user.data);
   const { dataUser, isLoadingUser } = useSelector((state) => state.literationAdded);
@@ -113,7 +116,64 @@ function Profile() {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     navigate("/user/signin");
+  };
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+  const changeAvatar = async (e) => {
+    if (!file) {
+      alert("Please select a file");
+      return;
+    }
+
+    try {
+      const compressedFile = await new Promise((resolve) => {
+        Resizer.imageFileResizer(
+          file, // File to resize
+          700, // New width
+          700, // New height
+          "JPEG", // Output format
+          100, // Quality (0-100)
+          0, // Rotation
+          (uri) => {
+            resolve(uri);
+          },
+          "blob" // Output type (blob, base64)
+        );
+      });
+
+      const formData = new FormData();
+      formData.append("profilePicture", compressedFile);
+
+      // Upload the compressed file to the server
+      await axios.post(`http://localhost:3030/image/upload_avatar/${user?._id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch(userData());
+      document.getElementById("changeImage").close();
+      alert("File uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+      alert("Error uploading file");
+    }
+  };
+
+  const changeAvatarDefault = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`http://localhost:3030/image/default_avatar/${user?._id}`);
+      dispatch(userData());
+      document.getElementById("changeImage").close();
+      alert("change picture successfully");
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+      alert("Error uploading file");
+    }
   };
   return (
     <main className="w-full min-h-screen bg-slate-100 font-poppins">
@@ -123,26 +183,54 @@ function Profile() {
             <div className="grid-cols-1 gap-4">
               <div className="bg-white p-8 rounded-xl mb-4 border-2 border-slate-200">
                 <div className="flex flex-col justify-center items-center">
-                  <div className="bg-purple-light h-32 w-32 rounded-full relative mb-4 border-4 border-slate-500">
-                    {user && (
-                      <img
-                        src={user.picture}
-                        className="h-full w-full object-cover object-center rounded-full"
-                        alt="profile"
-                      />
+                  <div className="bg-slate-100 h-32 w-32 rounded-full relative mb-4 border-4 border-slate-500">
+                    {user && user?.picture && (
+                      <img src={user.picture} className="h-full w-full object-cover object-center rounded-full" />
                     )}
-                    <div className="bg-white shadow h-6 w-6 rounded-full border-2 border-slate-200 absolute right-3 top-1 flex items-center justify-center p-1">
+                    <div
+                      className="bg-white hover:bg-slate-100 shadow h-6 w-6 rounded-full border-2 border-slate-500 absolute right-3 top-1 flex items-center justify-center p-1 cursor-pointer"
+                      onClick={() => document.getElementById("changeImage").showModal()}
+                    >
                       <PencilIcon className="text-slate-500" />
                     </div>
+                    <dialog id="changeImage" className="modal">
+                      <div className="modal-box max-w-md">
+                        <form>
+                          <input
+                            type="file"
+                            className="file-input file-input-bordered w-full mb-4"
+                            onChange={handleFileChange}
+                          />
+                          <button
+                            className="w-full bg-white text-purple-light border-2 border-purple-light rounded-lg px-4 py-2 mb-4 hover:bg-purple-light hover:text-white"
+                            onClick={changeAvatarDefault}
+                          >
+                            Ubah Default
+                          </button>
+                          <button
+                            type="button"
+                            onClick={changeAvatar}
+                            className="w-full px-4 py-2 rounded-xl bg-gradient-to-r from-purple-light to-purple-semi-dark text-white"
+                          >
+                            Simpan
+                          </button>
+                        </form>
+                      </div>
+                      <form method="dialog" className="modal-backdrop">
+                        <button>close</button>
+                      </form>
+                    </dialog>
                   </div>
                   {user && <h1 className="text-slate-500 font-semibold mb-4">{user.name}</h1>}
-                  <div
-                    className={`badge font-bold ${
-                      user?.verified ? "bg-emerald-100 text-emerald-500" : "bg-red-100 text-red-400"
-                    } p-3 rounded-lg mb-4`}
-                  >
-                    {user?.verified ? "Aktif" : "Belum Aktif"}
-                  </div>
+                  {user && user?.verified && (
+                    <div
+                      className={`badge font-bold ${
+                        user?.verified ? "bg-emerald-100 text-emerald-500" : "bg-red-100 text-red-400"
+                      } p-3 rounded-lg mb-4`}
+                    >
+                      {user?.verified ? "Aktif" : "Belum Aktif"}
+                    </div>
+                  )}
                   <form className="w-full" onSubmit={handleUpdateUser}>
                     <div className="form-group w-full relative mb-3">
                       <label className="text-xs text-slate-400 absolute z-10 left-3 top-2" htmlFor="name">

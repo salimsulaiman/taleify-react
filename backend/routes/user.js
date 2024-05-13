@@ -250,7 +250,6 @@ router.put("/:id", verifyToken, async (req, res) => {
     await User.findByIdAndUpdate(id, {
       name,
       email,
-      picture: `https://api.dicebear.com/7.x/initials/svg?seed=${name}&size=256`,
     }).then(
       res.status(200).json({
         status: res.statusCode,
@@ -303,7 +302,62 @@ const sendOTPVerificationEmail = async ({ _id, email }) => {
       from: process.env.AUTH_EMAIL,
       to: email,
       subject: "Verify Your Email",
-      html: `<p>Enter ${otp} in the app to verify your email address</p><p>This code <b>expires in 1 hour</b>.</p>`,
+      html: `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Verification</title>
+          <style>
+            /* CSS Reset */
+            body, h1, p {
+              margin: 0;
+              padding: 0;
+            }
+            
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f2f2f2;
+              padding: 20px;
+            }
+            
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            h1 {
+              color: #333333;
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            
+            .otp-code {
+              text-align: center;
+              font-size: 36px;
+              font-weight: bold;
+              color: #007bff;
+              margin-bottom: 20px;
+            }
+            
+            .expiry-info {
+              text-align: center;
+              color: #666666;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Taleify Email Verification</h1>
+            <p class="otp-code">${otp}</p>
+            <p class="expiry-info">This code expires in 1 hour.</p>
+          </div>
+        </body>
+        </html>`,
     };
 
     // hash the otp

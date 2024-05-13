@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function StoryList({ title, status, index, score, idStory }) {
   const navigate = useNavigate();
@@ -13,16 +13,18 @@ function StoryList({ title, status, index, score, idStory }) {
         <div className="flex w-full md:w-1/2 flex-col justify-center">
           <h4 className="text-xs text-slate-400">Literasi {index}</h4>
           <h4 className="text-sm sm:text-base text-slate-500 hidden md:block">{title}</h4>
-          <a href="">
+          <Link to={`/user/literations/story/${idStory}`}>
             <h4 className="text-sm sm:text-base text-slate-500 block md:hidden hover:text-purple-light">{title}</h4>
-          </a>
+          </Link>
         </div>
         <div className="flex md:grid grid-cols-3 gap-4 p-0 md:p-4">
           <div className="flex flex-col items-center">
             <h4 className="text-xs text-slate-400 text-center hidden md:block">Status Literasi</h4>
             <h4
               className={`text-xs  px-2 py-1 rounded-md border-[1px] text-center ${
-                status == "0" ? "bg-slate-100 text-slate-500 border-slate-500 mt-2" : "bg-emerald-500 text-white border-emerald-700 mt-2"
+                status == "0"
+                  ? "bg-slate-100 text-slate-500 border-slate-500 mt-2"
+                  : "bg-emerald-500 text-white border-emerald-700 mt-2"
               }`}
             >
               {status == "0" ? "Belum Selesai" : "Selesai"}

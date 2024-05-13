@@ -91,7 +91,7 @@ const NavApp = () => {
             </li>
             <li className="ms-7">
               <Link to={"/user/profile"}>
-                <div className="w-8 h-8 rounded-full  overflow-hidden flex justify-center items-center relative">
+                <div className="w-8 h-8 rounded-full bg-slate-100 overflow-hidden flex justify-center items-center relative">
                   {isLoading ? (
                     <img src={Profile} alt="profile.jpg" className="rounded-full object-cover w-full h-full" />
                   ) : (

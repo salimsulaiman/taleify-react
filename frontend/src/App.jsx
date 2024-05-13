@@ -29,6 +29,7 @@ function App() {
           <Route path="/user/literations/question/:id" element={<Question />} />
           <Route path="/user/literations/user_literation" element={<UserLiteration />} />
           <Route path="/user/literations/search" element={<SearchLiteration />} />
+          <Route path="/user/verification" element={<Verification />} />
         </Route>
         <Route path="/user/signin" element={<SignIn />} />
         <Route path="/user/signup" element={<Signup />} />

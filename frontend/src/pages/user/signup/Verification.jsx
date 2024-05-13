@@ -65,6 +65,8 @@ function Verification() {
     dispatch(compareVerificationCode(userId, verificationCode)).then((response) => {
       if (response.status == "VERIFIED") {
         alert("Veirifikasi berhasil");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
         navigate("/user/signin");
       }
     });
@@ -130,7 +132,7 @@ function Verification() {
         </button>
         {error && <p className="text-sm text-slate-500 mt-6 text-center">{error}</p>}
         {message && <p className="text-sm text-red-700 mt-6 text-center">{message}</p>}
-        {messageResend && <p className="text-sm text-red-700 mt-6 text-center">{messageResend}</p>}
+        {typeof messageResend === "string" && <p className="text-sm text-red-700 mt-6 text-center">{messageResend}</p>}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 dotenv.config();
 
 app.use(express.json());
@@ -18,6 +19,10 @@ const storyRoutes = require("./routes/story");
 const questionRoutes = require("./routes/question");
 const userAnswerRoutes = require("./routes/user_answer");
 const userPointRoutes = require("./routes/user_point");
+const imageRoutes = require("./routes/image");
+
+// serve static file
+app.use("/image/profile", express.static(path.join(__dirname, "image/profile")));
 
 // routes
 app.use("/literation", literationRoutes);
@@ -29,6 +34,7 @@ app.use("/story", storyRoutes);
 app.use("/question", questionRoutes);
 app.use("/user_answer", userAnswerRoutes);
 app.use("/user_point", userPointRoutes);
+app.use("/image", imageRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

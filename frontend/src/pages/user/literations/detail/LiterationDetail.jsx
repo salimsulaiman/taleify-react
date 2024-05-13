@@ -118,11 +118,11 @@ function LiterationDetail() {
                 </h4>
                 <div className="flex mb-4">
                   <div className="bg-purple-light-400 text-purple-dark text-xs font-bold text-center rounded-md py-2 px-4 me-1">
-                    Fiksi
+                    {dataDetail?.genre?.name}
                   </div>
                   <div className="bg-yellow-200 text-yellow-500 text-xs font-bold text-center rounded-md py-2 px-4 ms-1 flex items-center justify-center">
                     <StarIcon className="h-3 me-1" />
-                    4.6
+                    {dataDetail?.rating}
                   </div>
                 </div>
                 <div className="flex static lg:absolute -top-10">
@@ -176,11 +176,11 @@ function LiterationDetail() {
               </h4>
               <div className="flex mb-4 sm:mb-0">
                 <div className="bg-purple-light-400 text-purple-dark text-xs font-bold text-center rounded-md py-2 px-4 me-1">
-                  Fiksi
+                  {dataDetail?.genre?.name}
                 </div>
                 <div className="bg-yellow-200 text-yellow-500 text-xs font-bold text-center rounded-md py-2 px-4 ms-1 flex items-center justify-center">
                   <StarIcon className="h-3 me-1" />
-                  4.6
+                  {dataDetail?.rating}
                 </div>
               </div>
               <h4 className="text-slate-500 text-base font-bold mb-4 sm:mb-0">Poin Literasi</h4>

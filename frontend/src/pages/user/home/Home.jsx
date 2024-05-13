@@ -31,6 +31,7 @@ function Home() {
   const [closeToast, setCloseToast] = useState(false);
 
   const user = useSelector((state) => state.user.data);
+  const isLoadingUser = useSelector((state) => state.user.isLoading);
   const { data, isLoading } = useSelector((state) => state.literation);
   const dataGenre = useSelector((state) => state.genre.data);
   const isLoadingGenre = useSelector((state) => state.genre.isLoading);
@@ -63,27 +64,40 @@ function Home() {
     setCloseToast(true);
   };
 
+  const handleVerification = () => {
+    navigate(`/user/verification?email=${user?.email}`);
+  };
+
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-24 md:pb-0">
-      <div
-        className={`toast z-10 w-full md:w-1/3 toast-center toast-middle sm:toast-end sm:toast-bottom ${
-          closeToast ? "hidden" : "block"
-        }`}
-      >
-        {user && user?.verified ? (
-          <div></div>
-        ) : (
-          <div className="alert bg-rose-500 bg-opacity-75 hover:bg-opacity-100 p-6 border-none block relative">
-            <IoCloseCircle
-              className="absolute text-white hover:text-slate-100 text-2xl right-2 top-2 cursor-pointer"
-              onClick={closeToastHandler}
-            />
-            <h3 className="text-white text-base mb-2 font-semibold">Akun Belum Aktif</h3>
-            <h3 className="text-white text-sm mb-3">Klik tombol dibawah ini untuk mengaktifkan akun</h3>
-            <button className="bg-white hover:bg-slate-100 text-slate-700 px-4 py-1 rounded-lg">Aktivasi</button>
-          </div>
-        )}
-      </div>
+      {isLoading ? (
+        <div></div>
+      ) : (
+        <div
+          className={`toast z-10 w-full md:w-1/3 toast-center toast-middle sm:toast-end sm:toast-bottom ${
+            closeToast ? "hidden" : "block"
+          }`}
+        >
+          {user && user?.verified ? (
+            <div></div>
+          ) : (
+            <div className="alert bg-rose-500 bg-opacity-75 hover:bg-opacity-100 p-6 border-none block relative">
+              <IoCloseCircle
+                className="absolute text-white hover:text-slate-100 text-2xl right-2 top-2 cursor-pointer"
+                onClick={closeToastHandler}
+              />
+              <h3 className="text-white text-base mb-2 font-semibold">Akun Belum Aktif</h3>
+              <h3 className="text-white text-sm mb-3">Klik tombol dibawah ini untuk mengaktifkan akun</h3>
+              <button
+                className="bg-white hover:bg-slate-100 text-slate-700 px-4 py-1 rounded-lg"
+                onClick={handleVerification}
+              >
+                Aktivasi
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <section id="recomendation" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pt-5 md:px-9 md:pt-5 lg:px-9 lg:pt-5">
@@ -104,7 +118,7 @@ function Home() {
             <div className="h-12 w-[2px] bg-purple-dark rounded-lg me-2"></div>
             <div>
               <h2 className="text-base sm:text-2xl text-slate-700">Literasi</h2>
-              <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Populer</h2>
+              <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Terbaru</h2>
             </div>
           </div>
           <div className="mt-8 flex items-center justify-center flex-col w-full min-h-[300px] relative">
@@ -132,18 +146,23 @@ function Home() {
                 <div></div>
               ) : (
                 data &&
-                data.map((element) => {
-                  return (
-                    <SwiperSlide key={element._id}>
-                      <CardLiteration
-                        deskripsi={element.desc}
-                        title={element.title}
-                        genre={element.genre.name}
-                        image={element.picture}
-                      />
-                    </SwiperSlide>
-                  );
-                })
+                data
+                  .slice(0, 4)
+                  .sort((a, b) => {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                  })
+                  .map((element) => {
+                    return (
+                      <SwiperSlide key={element._id}>
+                        <CardLiteration
+                          deskripsi={element.desc}
+                          title={element.title}
+                          genre={element.genre.name}
+                          image={element.picture}
+                        />
+                      </SwiperSlide>
+                    );
+                  })
               )}
             </Swiper>
             <div className="hidden md:block absolute blur-side-right right-0 top-0 bottom-0 w-20 z-10"></div>
@@ -183,6 +202,12 @@ function Home() {
                     </li>
                   );
                 })}
+              <li
+                className={`ms-5 cursor-pointer hover:text-purple-semi-dark
+                `}
+              >
+                Lainnya
+              </li>
             </ul>
             <select
               onChange={(e) => setFilterGenre(e.target.value)}
@@ -220,6 +245,10 @@ function Home() {
               </div>
             ) : (
               data
+                .slice(0, 10)
+                .sort((a, b) => {
+                  return new Date(a.createdAt) - new Date(b.createdAt);
+                })
                 .filter((el) => {
                   if (filterGenre === "All") {
                     return true;

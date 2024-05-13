@@ -69,7 +69,6 @@ export function resendVerifyCode(userId, email) {
 
       return result.data;
     } catch (error) {
-      dispatch(verifyOTPFailure(error.message));
       throw error;
     }
   };
