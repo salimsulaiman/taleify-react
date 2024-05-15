@@ -1318,24 +1318,6 @@ html {
   outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
 }
 
-.file-input-ghost {
-  --tw-bg-opacity: 0.05;
-}
-
-.file-input-ghost:focus {
-  --tw-bg-opacity: 1;
-  --tw-text-opacity: 1;
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
-  box-shadow: none;
-}
-
-.file-input-ghost::file-selector-button {
-  border-width: 1px;
-  border-color: transparent;
-  background-color: transparent;
-  color: currentColor;
-}
-
 .file-input-disabled,
   .file-input[disabled] {
   cursor: not-allowed;
@@ -2317,6 +2299,20 @@ html {
   -webkit-line-clamp: 4;
 }
 
+.line-clamp-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .line-clamp-none {
   overflow: visible;
   display: block;
@@ -2420,12 +2416,12 @@ html {
   height: 235px;
 }
 
-.h-\[284px\] {
-  height: 284px;
-}
-
 .h-\[31px\] {
   height: 31px;
+}
+
+.h-\[400px\] {
+  height: 400px;
 }
 
 .h-\[44px\] {
@@ -2586,10 +2582,6 @@ html {
 
 .max-w-5xl {
   max-width: 64rem;
-}
-
-.max-w-\[50px\] {
-  max-width: 50px;
 }
 
 .max-w-md {
@@ -2840,16 +2832,6 @@ html {
 .border-yellow-700 {
   --tw-border-opacity: 1;
   border-color: rgb(161 98 7 / var(--tw-border-opacity));
-}
-
-.border-purple-dark {
-  --tw-border-opacity: 1;
-  border-color: rgb(87 84 247 / var(--tw-border-opacity));
-}
-
-.border-purple-semi-dark {
-  --tw-border-opacity: 1;
-  border-color: rgb(86 91 217 / var(--tw-border-opacity));
 }
 
 .bg-black {
@@ -3477,11 +3459,6 @@ html {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.outline-none {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-
 .drop-shadow-lg {
   --tw-drop-shadow: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -3594,11 +3571,6 @@ html {
 .hover\:bg-slate-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-purple-dark:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(87 84 247 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-100:hover {
@@ -3752,13 +3724,6 @@ html {
     -webkit-line-clamp: 1;
   }
 
-  .sm\:line-clamp-4 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-  }
-
   .sm\:block {
     display: block;
   }
@@ -3809,10 +3774,6 @@ html {
 
   .sm\:w-full {
     width: 100%;
-  }
-
-  .sm\:max-w-\[173px\] {
-    max-width: 173px;
   }
 
   .sm\:flex-grow-0 {
@@ -3893,11 +3854,18 @@ html {
     margin-top: 2.75rem;
   }
 
-  .md\:line-clamp-5 {
+  .md\:line-clamp-3 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
+  }
+
+  .md\:line-clamp-4 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
   }
 
   .md\:block {
@@ -4050,11 +4018,20 @@ html {
     font-size: 1rem;
     line-height: 1.5rem;
   }
+
+  .md\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .lg\:absolute {
     position: absolute;
+  }
+
+  .lg\:relative {
+    position: relative;
   }
 
   .lg\:-top-28 {
@@ -4101,6 +4078,13 @@ html {
     -webkit-line-clamp: 1;
   }
 
+  .lg\:line-clamp-5 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+  }
+
   .lg\:block {
     display: block;
   }
@@ -4111,6 +4095,10 @@ html {
 
   .lg\:hidden {
     display: none;
+  }
+
+  .lg\:h-\[284px\] {
+    height: 284px;
   }
 
   .lg\:h-\[392px\] {
@@ -4133,6 +4121,10 @@ html {
     height: 672px;
   }
 
+  .lg\:h-full {
+    height: 100%;
+  }
+
   .lg\:min-h-\[593px\] {
     min-height: 593px;
   }
@@ -4143,6 +4135,10 @@ html {
 
   .lg\:w-1\/2 {
     width: 50%;
+  }
+
+  .lg\:w-\[173px\] {
+    width: 173px;
   }
 
   .lg\:-translate-x-2\/3 {

@@ -374,9 +374,9 @@ function Profile() {
                         dataUser
                           .sort((a, b) => {
                             if (filter === "new") {
-                              return new Date(a.createdAt) - new Date(b.createdAt);
-                            } else if (filter === "old") {
                               return new Date(b.createdAt) - new Date(a.createdAt);
+                            } else if (filter === "old") {
+                              return new Date(a.createdAt) - new Date(b.createdAt);
                             } else {
                               return 0;
                             }
