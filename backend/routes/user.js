@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
 const User = require("../models/User");
-const { verifyToken } = require("./verifytoken");
 const UserPoint = require("../models/UserPoint");
 const UserOTPVerification = require("../models/UserOtpVerification");
+const { verifyToken } = require("./verifytoken");
 
 // nodemailer
 let transporter = nodemailer.createTransport({
@@ -33,7 +33,9 @@ router.get("/", async (req, res) => {
 router.get("/userdetail", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const data = await User.findById(userId).select("_id name email picture verified createdAt updatedAt");
+    const data = await User.findById(userId).select(
+      "_id name email picture verified createdAt updatedAt"
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -45,7 +47,9 @@ router.get("/userdetail", verifyToken, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const data = await User.findById(req.params.id).select("_id name email picture verified createdAt updatedAt");
+    const data = await User.findById(req.params.id).select(
+      "_id name email picture verified createdAt updatedAt"
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({
@@ -87,7 +91,9 @@ router.post("/signup", async (req, res) => {
   const emailExist = await checkEmailExist(email);
 
   if (emailExist) {
-    return res.status(400).json({ status: "EXIST", message: "Email already exists" });
+    return res
+      .status(400)
+      .json({ status: "EXIST", message: "Email already exists" });
   }
 
   try {
@@ -139,14 +145,18 @@ router.post("/verifyOTP", async (req, res) => {
         userId,
       });
       if (UserOTPVerificationRecords.length <= 0) {
-        throw Error("Akun tidak tersedia atau mungkin telah terverifikasi. Silahkan daftar atau masuk ke dalam akun");
+        throw Error(
+          "Akun tidak tersedia atau mungkin telah terverifikasi. Silahkan daftar atau masuk ke dalam akun"
+        );
       } else {
         const { expiredAt } = UserOTPVerificationRecords[0];
         const hashOTP = UserOTPVerificationRecords[0].otp;
 
         if (expiredAt < Date.now()) {
           await UserOTPVerification.deleteMany({ userId });
-          throw new Error("Kode telah kadaluarsa. Silahkan kirim ulang kode verifikasi.");
+          throw new Error(
+            "Kode telah kadaluarsa. Silahkan kirim ulang kode verifikasi."
+          );
         } else {
           const validOTP = await bcrypt.compare(otp, hashOTP);
           if (!validOTP) {
@@ -272,13 +282,17 @@ router.put("/changePassword/:id", verifyToken, async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ status: res.statusCode, message: "User not found" });
+      return res
+        .status(404)
+        .json({ status: res.statusCode, message: "User not found" });
     }
 
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordMatch) {
-      return res.status(400).json({ status: res.statusCode, message: "Password does not match" });
+      return res
+        .status(400)
+        .json({ status: res.statusCode, message: "Password does not match" });
     }
 
     await User.findByIdAndUpdate(id, {
