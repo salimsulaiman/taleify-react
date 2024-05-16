@@ -6,24 +6,44 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { userData } from "../../../../redux/action/userAction";
 import { getLiterationById } from "../../../../redux/action/literationAction";
 import { getLiterationAddedById } from "../../../../redux/action/literationAddedAction";
-import { getStory, getStoryById, getStoryByIdLiteration } from "../../../../redux/action/storyAction";
+import {
+  getStory,
+  getStoryById,
+  getStoryByIdLiteration,
+} from "../../../../redux/action/storyAction";
 import StoryList from "../../../../component/StoryList";
 import { getUserAnswerByUserId } from "../../../../redux/action/userAnswerAction";
 import { getQuestion } from "../../../../redux/action/questionAction";
+import { getRatingByUserLiteration } from "../../../../redux/action/ratingAction";
 
 function LiterationDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { dataDetail, isLoadingDetail } = useSelector((state) => state.literation);
-  const literationAdded = useSelector((state) => state.literationAdded.dataDetail);
-  const isLoadingLiteration = useSelector((state) => state.literationAdded.isLoadingDetail);
+  const { dataDetail, isLoadingDetail } = useSelector(
+    (state) => state.literation
+  );
+  const literationAdded = useSelector(
+    (state) => state.literationAdded.dataDetail
+  );
+  const isLoadingLiteration = useSelector(
+    (state) => state.literationAdded.isLoadingDetail
+  );
   const dataStory = useSelector((state) => state.story.data);
-  const dataStoryLiteration = useSelector((state) => state.story.dataLiteration);
+  const dataStoryLiteration = useSelector(
+    (state) => state.story.dataLiteration
+  );
   const user = useSelector((state) => state.user.data);
-  const { dataUserId, isLoadingUserId } = useSelector((state) => state.userAnswer);
+  const { dataUserId, isLoadingUserId } = useSelector(
+    (state) => state.userAnswer
+  );
   const { data, isLoading } = useSelector((state) => state.question);
+  const dataRating = useSelector((state) => state.rating.data);
+  const dataDetailRating = useSelector((state) => state.rating.dataDetail);
+  const dataDetailRatingUserLiteration = useSelector(
+    (state) => state.rating.dataUserLiteration
+  );
 
   const expanded = () => {
     setIsExpanded(!isExpanded);
@@ -69,6 +89,13 @@ function LiterationDetail() {
     }
   }, [id, dispatch]);
 
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId && id) {
+      dispatch(getRatingByUserLiteration(userId, id));
+    }
+  }, [id, dispatch]);
+
   const openLiteration = () => {};
   const deleteLiteration = () => {};
   const addLiteration = () => {};
@@ -81,7 +108,11 @@ function LiterationDetail() {
               <div className="row-span-4 lg:row-span-1 col-span-4 lg:col-span-1 relative">
                 <div className="absolute h-[200px] lg:h-[407px] w-full bottom-0 lg:-top-28 left-1/2 -translate-x-1/2 rounded-lg overflow-hidden">
                   {isLoadingDetail ? (
-                    <img src={ImageLoad} alt="cover.png" className="object-cover object-bottom h-full w-full" />
+                    <img
+                      src={ImageLoad}
+                      alt="cover.png"
+                      className="object-cover object-bottom h-full w-full"
+                    />
                   ) : (
                     dataDetail && (
                       <img
@@ -101,7 +132,9 @@ function LiterationDetail() {
                 )}
 
                 {dataDetail && dataDetail.author && (
-                  <h4 className="text-sm text-slate-400 mb-4">{dataDetail.author.name}</h4>
+                  <h4 className="text-sm text-slate-400 mb-4">
+                    {dataDetail.author.name}
+                  </h4>
                 )}
 
                 {dataDetail && (
@@ -113,7 +146,10 @@ function LiterationDetail() {
                     {dataDetail.desc}
                   </h3>
                 )}
-                <h4 className="text-sm text-cyan-600 mb-4 cursor-pointer" onClick={expanded}>
+                <h4
+                  className="text-sm text-cyan-600 mb-4 cursor-pointer"
+                  onClick={expanded}
+                >
                   {isExpanded ? "Sembunyikan" : "Lihat Selengkapnya"}
                 </h4>
                 <div className="flex mb-4">
@@ -126,7 +162,9 @@ function LiterationDetail() {
                   </div>
                 </div>
                 <div className="flex static lg:absolute -top-10">
-                  {!isLoadingLiteration && literationAdded && literationAdded != null ? (
+                  {!isLoadingLiteration &&
+                  literationAdded &&
+                  literationAdded != null ? (
                     <div className="flex w-full">
                       <button
                         className="bg-gradient-to-r from-red-400 to-red-600 text-white px-4 py-2 rounded-md cursor-pointer text-sm md:text-base me-4 flex-grow sm:flex-grow-0"
@@ -142,18 +180,26 @@ function LiterationDetail() {
               </div>
               <div className="col-span-4 mt-4">
                 {dataStoryLiteration?.map((items, index) => {
-                  const filteredData = data && data.filter((el) => el?.story?._id === items?._id);
+                  const filteredData =
+                    data && data.filter((el) => el?.story?._id === items?._id);
                   return (
                     <div key={items._id}>
                       <StoryList
                         title={items.subTitle}
                         status={
-                          dataUserId && dataUserId.filter((el) => el?.question?.story?._id == items._id).length > 0
+                          dataUserId &&
+                          dataUserId.filter(
+                            (el) => el?.question?.story?._id == items._id
+                          ).length > 0
                             ? 1
                             : 0
                         }
                         index={index + 1}
-                        score={filteredData && filteredData[0] && filteredData[0]?.point}
+                        score={
+                          filteredData &&
+                          filteredData[0] &&
+                          filteredData[0]?.point
+                        }
                         idStory={items._id}
                       />
                     </div>
@@ -183,7 +229,9 @@ function LiterationDetail() {
                   {dataDetail?.rating}
                 </div>
               </div>
-              <h4 className="text-slate-500 text-base font-bold mb-4 sm:mb-0">Poin Literasi</h4>
+              <h4 className="text-slate-500 text-base font-bold mb-4 sm:mb-0">
+                Poin Literasi
+              </h4>
               <h3 className="text-4xl text-green-700 font-bold">10</h3>
             </div>
           </div>

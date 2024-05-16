@@ -20,9 +20,13 @@ const questionRoutes = require("./routes/question");
 const userAnswerRoutes = require("./routes/user_answer");
 const userPointRoutes = require("./routes/user_point");
 const imageRoutes = require("./routes/image");
+const ratingRoutes = require("./routes/rating");
 
 // serve static file
-app.use("/image/profile", express.static(path.join(__dirname, "image/profile")));
+app.use(
+  "/image/profile",
+  express.static(path.join(__dirname, "image/profile"))
+);
 
 // routes
 app.use("/literation", literationRoutes);
@@ -35,6 +39,7 @@ app.use("/question", questionRoutes);
 app.use("/user_answer", userAnswerRoutes);
 app.use("/user_point", userPointRoutes);
 app.use("/image", imageRoutes);
+app.use("/rating", ratingRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
