@@ -1,7 +1,12 @@
 import { StarIcon } from "@heroicons/react/16/solid";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ImageLoad from "../../../../assets/image/imageload.png";
+import BorringIcon from "../../../../assets/image/iconrating/1.png";
+import NotEngagingIcon from "../../../../assets/image/iconrating/2.png";
+import OkayIcon from "../../../../assets/image/iconrating/3.png";
+import EngagingIcon from "../../../../assets/image/iconrating/4.png";
+import VeryEngagingIcon from "../../../../assets/image/iconrating/5.png";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { userData } from "../../../../redux/action/userAction";
 import { getLiterationById } from "../../../../redux/action/literationAction";
@@ -14,13 +19,53 @@ import {
 import StoryList from "../../../../component/StoryList";
 import { getUserAnswerByUserId } from "../../../../redux/action/userAnswerAction";
 import { getQuestion } from "../../../../redux/action/questionAction";
-import { getRatingByUserLiteration } from "../../../../redux/action/ratingAction";
+import {
+  addRating,
+  getRatingByUserLiteration,
+} from "../../../../redux/action/ratingAction";
+import { IoCloseCircle } from "react-icons/io5";
 
 function LiterationDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [closeToast, setCloseToast] = useState(false);
+  const [icons, setIcons] = useState([
+    {
+      img: BorringIcon,
+      desc: "Sangat Membosankan",
+      rating: 1,
+    },
+    {
+      img: NotEngagingIcon,
+      desc: "Kurang Menarik",
+      rating: 2,
+    },
+    {
+      img: OkayIcon,
+      desc: "Bagus",
+      rating: 3,
+    },
+    {
+      img: EngagingIcon,
+      desc: "Menarik",
+      rating: 4,
+    },
+    {
+      img: VeryEngagingIcon,
+      desc: "Sangat Menarik",
+      rating: 5,
+    },
+  ]);
+
+  const [selectedRating, setSelectedRating] = useState({
+    desc: null,
+    rating: null,
+  });
+
+  const modalRef = useRef(null);
+
   const { dataDetail, isLoadingDetail } = useSelector(
     (state) => state.literation
   );
@@ -96,11 +141,91 @@ function LiterationDetail() {
     }
   }, [id, dispatch]);
 
+  useEffect(() => {
+    if (
+      id &&
+      dataUserId &&
+      dataStoryLiteration &&
+      dataUserId.filter((item) => item?.question?.story?.literation === id)
+        ?.length > 0 &&
+      dataStoryLiteration?.length > 0 &&
+      dataUserId.filter((item) => item?.question?.story?.literation === id)
+        ?.length === dataStoryLiteration.length
+    ) {
+      if (dataDetailRatingUserLiteration === null) {
+        modalRef.current.showModal();
+      }
+    }
+  }, [id, dataUserId, dataStoryLiteration, dataDetailRatingUserLiteration]);
+
   const openLiteration = () => {};
   const deleteLiteration = () => {};
   const addLiteration = () => {};
+  const handleRating = (desc, rating) => {
+    setSelectedRating({
+      desc: desc,
+      rating: rating,
+    });
+  };
+  const handleSendRating = (rating) => {
+    if (selectedRating.desc == null && selectedRating.rating == null) {
+      alert("Silahkan nilai kami dengan klik emoticon");
+    } else {
+      dispatch(addRating(rating, id, user?._id)).then((response) => {
+        dispatch(getLiterationById(id));
+        dispatch(getStory());
+        dispatch(getStoryByIdLiteration(id));
+        dispatch(userData());
+        dispatch(getQuestion());
+        dispatch(getLiterationAddedById(user?._id, id));
+        dispatch(getUserAnswerByUserId(user?._id));
+        modalRef.current.close();
+        alert("Terimakasih atas feedbacknya");
+      });
+    }
+  };
   return (
     <main className="w-full min-h-screen bg-white font-poppins pb-16 md:pb-0">
+      <dialog id="ratingModal" className="modal" ref={modalRef}>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg text-center">
+            Kamu telah menyelesaikan semua cerita
+          </h3>
+          <p className="py-4 text-center">Gimana pendapatmu tentang cerita</p>
+          <p className="text-center">
+            <b>{dataDetail?.title}</b>?
+          </p>
+          <div className="flex flex-wrap items-center justify-center mt-5">
+            {icons.map((icon, index) => {
+              return (
+                <div key={index}>
+                  <img
+                    src={icon?.img}
+                    alt={icon.desc}
+                    width={"40px"}
+                    className="mx-2 cursor-pointer"
+                    onClick={() => handleRating(icon.desc, icon.rating)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="font-bold text-center mt-4">
+            {selectedRating.desc}
+          </div>
+          <div className="text-center mt-4">
+            <button
+              className="bg-purple-light px-4 py-2 rounded-lg text-white hover:bg-purple-dark"
+              onClick={() => handleSendRating(selectedRating.rating)}
+            >
+              Kirim
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
       <section id="literarion-item" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pb-16 pt-4 md:pt-14">
           <div className="w-full bg-slate-100 border-2 border-slate-200 min-h-[343px] mt-[193px] relative rounded-lg px-4 pt-4 pb-8">
