@@ -125,7 +125,7 @@ function LiterationDetail() {
                     {dataDetail?.rating}
                   </div>
                 </div>
-                <div className="flex static lg:absolute -top-10">
+                {/* <div className="flex static lg:absolute -top-10">
                   {!isLoadingLiteration && literationAdded && literationAdded != null ? (
                     <div className="flex w-full">
                       <button
@@ -138,7 +138,7 @@ function LiterationDetail() {
                   ) : (
                     <div className="flex w-full"></div>
                   )}
-                </div>
+                </div> */}
               </div>
               <div className="col-span-4 mt-4">
                 {dataStoryLiteration?.map((items, index) => {

@@ -155,6 +155,7 @@ function Home() {
                     return (
                       <SwiperSlide key={element._id}>
                         <CardLiteration
+                          id={element._id}
                           deskripsi={element.desc}
                           title={element.title}
                           genre={element.genre.name}

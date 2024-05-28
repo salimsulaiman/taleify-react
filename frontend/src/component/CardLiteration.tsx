@@ -1,7 +1,13 @@
 import React from "react";
 import { StarIcon } from "@heroicons/react/16/solid";
+import { useNavigate } from "react-router-dom";
 
-function CardLiteration({ deskripsi, title, genre, image }) {
+function CardLiteration({ deskripsi, title, genre, image, id }) {
+  const navigate = useNavigate();
+
+  const navigatePage = (id) => {
+    navigate(`/user/literations/${id}`);
+  };
   return (
     <div className="w-auto h-[400px] lg:h-[284px] bg-slate-100 rounded-lg border-2 border-slate-200 py-7 px-6 flex flex-col lg:flex-row justify-between items-start relative">
       <div className="min-w-[173px] w-full lg:w-[173px] h-[200px] lg:h-full bg-purple-light rounded-lg me-8 lg:relative overflow-hidden">
@@ -24,7 +30,10 @@ function CardLiteration({ deskripsi, title, genre, image }) {
               {deskripsi}
             </p>
           </div>
-          <button className="w-full bg-purple-light hover:bg-purple-semi-dark px-4 py-2 text-center text-white rounded-md mt-3 text-xs md:text-base">
+          <button
+            className="w-full bg-purple-light hover:bg-purple-semi-dark px-4 py-2 text-center text-white rounded-md mt-3 text-xs md:text-base"
+            onClick={() => navigatePage(id)}
+          >
             Tambahkan Literasi
           </button>
         </div>

@@ -70,17 +70,21 @@ function SearchLiteration() {
                 })}
             </ul>
             <select
-              defaultValue={"Semua"}
               id="countries"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block md:hidden mt-6"
+              onChange={(e) => setFilterGenre(e.target.value)}
+              value={filterGenre}
             >
-              <option value={"Semua"}>-- Genre --</option>
-              <option value="Semua">Semua</option>
-              <option value="Fiksi">Fiksi</option>
-              <option value="Sejarah">Sejarah</option>
-              <option value="Akademis">Akademis</option>
-              <option value="Romantis">Romantis</option>
-              <option value="Horror">Horror</option>
+              <option value={"All"}>-- Genre --</option>
+              <option value="All">Semua</option>
+              {dataGenre &&
+                dataGenre.map((el) => {
+                  return (
+                    <option key={el?._id} value={el?.name}>
+                      {el?.name}
+                    </option>
+                  );
+                })}
             </select>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mt-5 md:mt-11">

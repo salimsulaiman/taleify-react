@@ -2,7 +2,7 @@ import React from "react";
 // components/Navbar.js
 import { useState, useEffect } from "react";
 import { BiSolidBookAlt } from "react-icons/bi";
-import { FaBell, FaSearch } from "react-icons/fa";
+import { FaBell, FaHome, FaSearch } from "react-icons/fa";
 import ModalSearch from "./ModalSearch";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
@@ -79,14 +79,14 @@ const NavApp = () => {
                 <FaSearch className="text-xl" />
               </button>
             </li>
-            <li className="ms-7">
+            {/* <li className="ms-7">
               <Link to={"/"} className="text-slate-700">
                 <FaBell className="text-xl" />
               </Link>
-            </li>
+            </li> */}
             <li className="ms-7">
               <Link to={"/user/literations/user_literation"} className="text-slate-700">
-                <BiSolidBookAlt className="text-xl" />
+                <BiSolidBookAlt className="text-2xl" />
               </Link>
             </li>
             <li className="ms-7">
@@ -129,31 +129,44 @@ const NavApp = () => {
         </dialog>
       </nav>
       <nav className="sm:hidden bg-white top-3 left-3 right-3 z-50 shadow fixed p-2 rounded-full border-2 border-purple-light flex items-center overflow-hidden">
-        <form action="" className="relative w-full">
+        <form className="relative w-full" onSubmit={handleSearch}>
           <input
             type="text"
             className="w-full text-slate-400 p-2 focus:outline-none focus:border-0 text-sm"
             placeholder="Search..."
+            value={search}
+            onChange={handleSearchInputChange}
           />
-          <FaSearch className="text-slate-500 text-2xl absolute right-4 top-1/2 -translate-y-1/2" />
+          <FaSearch
+            className="text-slate-500 text-2xl absolute right-4 top-1/2 -translate-y-1/2"
+            onClick={handleSearch}
+          />
         </form>
       </nav>
       <nav
         className={
-          "bg-white border-2 border-purple-light block sm:hidden fixed right-3 left-3 z-50 bottom-2 rounded-2xl shadow"
+          "bg-white border-2 border-purple-light block sm:hidden fixed right-3 left-3 z-50 rounded-2xl shadow bottom-0 mb-2"
         }
       >
         <div className="max-w-screen-xl flex flex-wrap items-center justify-center mx-auto px-9 py-5">
           <div className="w-full flex items-center justify-evenly">
-            <Link to={"/"} className="text-slate-700">
-              <FaBell className="text-xl" />
+            <Link to={"/user/home"} className="text-slate-700">
+              <FaHome className="text-xl" />
             </Link>
-            <Link to={"/"} className="text-slate-700">
+            <Link to={"/user/literations/user_literation"} className="text-slate-700">
               <BiSolidBookAlt className="text-xl" />
             </Link>
-            <div className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center relative">
-              <img src={Profile} alt="profile.jpg" className="rounded-full object-cover w-full h-full" />
-            </div>
+            <Link to={"/user/profile"}>
+              <div className="w-8 h-8 rounded-full bg-slate-100 overflow-hidden flex justify-center items-center relative">
+                {isLoading ? (
+                  <img src={Profile} alt="profile.jpg" className="rounded-full object-cover w-full h-full" />
+                ) : (
+                  data && (
+                    <img src={data.picture} alt="profile.jpg" className="rounded-full object-cover w-full h-full" />
+                  )
+                )}
+              </div>
+            </Link>
           </div>
         </div>
       </nav>
