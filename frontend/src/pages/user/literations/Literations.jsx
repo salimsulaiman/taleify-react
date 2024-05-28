@@ -5,7 +5,10 @@ import axios from "axios";
 import { StarIcon } from "@heroicons/react/16/solid";
 import LiterationList from "../../../component/LiterationList";
 import { useDispatch, useSelector } from "react-redux";
-import { getLiteration, getLiterationById } from "../../../redux/action/literationAction";
+import {
+  getLiteration,
+  getLiterationById,
+} from "../../../redux/action/literationAction";
 import ImageLoad from "../../../assets/image/imageload.png";
 import {
   addUserLiteration,
@@ -23,9 +26,15 @@ function Literations() {
   const dispatch = useDispatch();
 
   const { data, isLoading } = useSelector((state) => state.literation);
-  const { dataDetail, isLoadingDetail } = useSelector((state) => state.literation);
-  const literationAdded = useSelector((state) => state.literationAdded.dataDetail);
-  const isLoadingLiteration = useSelector((state) => state.literationAdded.isLoadingDetail);
+  const { dataDetail, isLoadingDetail } = useSelector(
+    (state) => state.literation
+  );
+  const literationAdded = useSelector(
+    (state) => state.literationAdded.dataDetail
+  );
+  const isLoadingLiteration = useSelector(
+    (state) => state.literationAdded.isLoadingDetail
+  );
   const user = useSelector((state) => state.user.data);
   const isLoadingUser = useSelector((state) => state.user.isLoading);
 
@@ -68,7 +77,11 @@ function Literations() {
       alert("Harap verifikasi terlebih dahulu akun anda");
     } else {
       if (userId && dataDetail?._id) {
-        if (literationAdded && literationAdded != null && literationAdded[0]?.status == 0) {
+        if (
+          literationAdded &&
+          literationAdded != null &&
+          literationAdded[0]?.status == 0
+        ) {
           const idLiterationAdded = literationAdded[0]?._id;
           dispatch(updateUserLiteration(idLiterationAdded, 1)).then(() => {
             dispatch(getLiterationAddedById(userId, id));
@@ -104,7 +117,6 @@ function Literations() {
 
   return (
     <main className="w-full min-h-screen bg-white font-poppins">
-      {console.log(literationAdded)}
       <section id="literarion-item" className="w-full">
         <div className="max-w-screen-xl mx-auto px-9 pb-5 pt-14">
           <div className="w-full bg-slate-100 border-2 border-slate-200 min-h-[343px] mt-[193px] relative rounded-lg p-4">
@@ -112,7 +124,11 @@ function Literations() {
               <div className="row-span-4 lg:row-span-1 col-span-4 lg:col-span-1 relative">
                 <div className="absolute h-[200px] lg:h-[407px] w-full bottom-0 lg:-top-28 left-1/2 -translate-x-1/2 rounded-lg overflow-hidden">
                   {isLoadingDetail ? (
-                    <img src={ImageLoad} alt="cover.png" className="object-cover object-bottom h-full w-full" />
+                    <img
+                      src={ImageLoad}
+                      alt="cover.png"
+                      className="object-cover object-bottom h-full w-full"
+                    />
                   ) : (
                     dataDetail && (
                       <img
@@ -132,7 +148,9 @@ function Literations() {
                 )}
 
                 {dataDetail && dataDetail.author && (
-                  <h4 className="text-sm text-slate-400 mb-4">{dataDetail.author.name}</h4>
+                  <h4 className="text-sm text-slate-400 mb-4">
+                    {dataDetail.author.name}
+                  </h4>
                 )}
 
                 {dataDetail && (
@@ -145,7 +163,10 @@ function Literations() {
                   </h3>
                 )}
 
-                <h4 className="text-sm text-cyan-600 mb-4 cursor-pointer" onClick={expanded}>
+                <h4
+                  className="text-sm text-cyan-600 mb-4 cursor-pointer"
+                  onClick={expanded}
+                >
                   {isExpanded ? "Sembunyikan" : "Lihat Selengkapnya"}
                 </h4>
                 {dataDetail && dataDetail.genre && (
@@ -203,7 +224,9 @@ function Literations() {
               <div className="h-12 w-[2px] bg-purple-dark rounded-lg me-2"></div>
               <div>
                 <h2 className="text-base sm:text-2xl text-slate-700">Genre</h2>
-                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">Populer</h2>
+                <h2 className="text-base sm:text-2xl text-slate-700 font-bold">
+                  Populer
+                </h2>
               </div>
             </div>
             <ul className="hidden md:flex text-slate-500 text-base">
