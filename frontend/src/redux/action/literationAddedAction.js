@@ -36,7 +36,7 @@ export function getLiterationAdded() {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/user_literation`);
+      const result = await axios.get(`http://localhost:3000/user_literation`);
       dispatch(successGetLiterationAdded(result.data));
     } catch (error) {
       console.log(error);
@@ -48,7 +48,7 @@ export function getLiterationByUserId(userId) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/user_literation/literation_added/${userId}`);
+      const result = await axios.get(`http://localhost:3000/user_literation/literation_added/${userId}`);
       dispatch(successGetDataLiterationAddedByUser(result.data));
     } catch (error) {
       console.log(error);
@@ -61,7 +61,7 @@ export function getLiterationAddedById(userId, literationId) {
     dispatch(fetchData());
     try {
       const result = await axios.get(
-        `http://localhost:3030/user_literation/literation_added/${userId}/${literationId}`
+        `http://localhost:3000/user_literation/literation_added/${userId}/${literationId}`
       );
       dispatch(successGetDataLiterationAdded(result.data));
     } catch (error) {
@@ -73,7 +73,7 @@ export function getLiterationAddedById(userId, literationId) {
 export function addUserLiteration(userId, literationId) {
   return async (dispatch) => {
     try {
-      const response = await axios.post("http://localhost:3030/user_literation/literation_added", {
+      const response = await axios.post("http://localhost:3000/user_literation/literation_added", {
         user: userId,
         literation: literationId,
       });
@@ -92,7 +92,7 @@ export function addUserLiteration(userId, literationId) {
 export function updateUserLiteration(id, status) {
   return async (dispatch) => {
     try {
-      const response = await axios.put(`http://localhost:3030/user_literation/literation_added/${id}`, {
+      const response = await axios.put(`http://localhost:3000/user_literation/literation_added/${id}`, {
         status: status,
       });
 

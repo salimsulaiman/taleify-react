@@ -62,7 +62,7 @@ export function userData() {
       authuser: "Bearer" + " " + localStorage.getItem("token"),
     };
     try {
-      const result = await axios.get(`http://localhost:3030/user/userdetail`, {
+      const result = await axios.get(`http://localhost:3000/user/userdetail`, {
         headers: header,
       });
       dispatch(getUserData(result.data));
@@ -76,7 +76,7 @@ export function getUserByEmail(email) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/user/get_user/search?email=${email}`);
+      const result = await axios.get(`http://localhost:3000/user/get_user/search?email=${email}`);
       dispatch(successGetUserDataByEmail(result.data));
     } catch (error) {
       console.log(error);
@@ -87,7 +87,7 @@ export function getUserByEmail(email) {
 export function loginUser(email, password) {
   return async (dispatch) => {
     try {
-      const result = await axios.post("http://localhost:3030/user/signin/", {
+      const result = await axios.post("http://localhost:3000/user/signin/", {
         email: email,
         password: password,
       });
@@ -101,7 +101,7 @@ export function loginUser(email, password) {
 export function registerUser(name, email, password) {
   return async (dispatch) => {
     try {
-      const result = await axios.post("http://localhost:3030/user/signup/", {
+      const result = await axios.post("http://localhost:3000/user/signup/", {
         name: name,
         email: email,
         password: password,
@@ -118,7 +118,7 @@ export function registerUser(name, email, password) {
 export function logoutUser() {
   return async (dispatch) => {
     try {
-      await axios.post("http://localhost:3030/user/logout/");
+      await axios.post("http://localhost:3000/user/logout/");
       dispatch({ type: LOGOUT_USER });
     } catch (error) {
       console.error("Error logging out:", error);
@@ -133,7 +133,7 @@ export function updateUser(id, name, email) {
     };
     try {
       const result = await axios.put(
-        `http://localhost:3030/user/${id}`,
+        `http://localhost:3000/user/${id}`,
         {
           name: name,
           email: email,
@@ -157,7 +157,7 @@ export function updatePasswordUser(id, oldPassword, newPassword) {
     };
     try {
       const result = await axios.put(
-        `http://localhost:3030/user/changePassword/${id}`,
+        `http://localhost:3000/user/changePassword/${id}`,
         {
           oldPassword: oldPassword,
           newPassword: newPassword,

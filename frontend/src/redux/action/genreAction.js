@@ -28,7 +28,7 @@ export function getGenre() {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/genre`);
+      const result = await axios.get(`http://localhost:3000/genre`);
       dispatch(successGetGenre(result.data));
     } catch (error) {
       console.log(error);
@@ -40,7 +40,7 @@ export function getGenreById(id) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/genre/${id}`);
+      const result = await axios.get(`http://localhost:3000/genre/${id}`);
       dispatch(successGetGenreById(result.data));
     } catch (error) {
       console.log(error);

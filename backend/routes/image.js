@@ -6,7 +6,7 @@ const User = require("../models/User");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../image/profile")); // Store uploaded files in the uploads directory
+    cb(null, path.join(__dirname, "../api/image/profile")); // Store uploaded files in the uploads directory
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); // Use the original filename
@@ -22,7 +22,7 @@ router.post("/upload_avatar/:id", upload.single("profilePicture"), async (req, r
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
-        picture: `http://localhost:3030/image/profile/${filename}`,
+        picture: `http://localhost:3000/image/profile/${filename}`,
       },
       { new: true }
     );

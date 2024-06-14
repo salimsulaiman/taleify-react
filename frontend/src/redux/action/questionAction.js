@@ -29,7 +29,7 @@ export function getQuestion() {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/question`);
+      const result = await axios.get(`http://localhost:3000/question`);
       dispatch(successGetQuestion(result.data));
     } catch (error) {
       console.log(error);
@@ -41,7 +41,7 @@ export function getQuestionyByStoryId(id) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/question/story/${id}`);
+      const result = await axios.get(`http://localhost:3000/question/story/${id}`);
       dispatch(successGetQuestionByStoryId(result.data));
     } catch (error) {
       console.log(error);

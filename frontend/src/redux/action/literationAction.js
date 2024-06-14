@@ -44,7 +44,7 @@ export function fetchFilteredData(query){
   return async (dispatch)=>{
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/literation/search/?title=${query}`);
+      const result = await axios.get(`http://localhost:3000/literation/search/?title=${query}`);
       dispatch(setFilteredData(result.data));
     } catch (error) {
       console.log(error);
@@ -56,7 +56,7 @@ export function getLiteration() {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/literation`);
+      const result = await axios.get(`http://localhost:3000/literation`);
       dispatch(successGetLiteration(result.data));
     } catch (error) {
       console.log(error);
@@ -68,7 +68,7 @@ export function getLiterationById(id) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/literation/${id}`);
+      const result = await axios.get(`http://localhost:3000/literation/${id}`);
       dispatch(successGetLiterationById(result.data));
     } catch (error) {
       console.log(error);

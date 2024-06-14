@@ -41,7 +41,7 @@ export const resendOTPSuccess = (message) => ({
 export function compareVerificationCode(userId, otp) {
   return async (dispatch) => {
     try {
-      const result = await axios.post(`http://localhost:3030/user/verifyOTP`, {
+      const result = await axios.post(`http://localhost:3000/user/verifyOTP`, {
         userId,
         otp,
       });
@@ -60,7 +60,7 @@ export function compareVerificationCode(userId, otp) {
 export function resendVerifyCode(userId, email) {
   return async (dispatch) => {
     try {
-      const result = await axios.post(`http://localhost:3030/user/resendOTPVerificationCode`, {
+      const result = await axios.post(`http://localhost:3000/user/resendOTPVerificationCode`, {
         userId,
         email,
       });

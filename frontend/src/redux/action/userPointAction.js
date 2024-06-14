@@ -37,7 +37,7 @@ export function getUserPoint() {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/user_point`);
+      const result = await axios.get(`http://localhost:3000/user_point`);
       dispatch(successGetUserPoint(result.point));
     } catch (error) {
       console.log(error);
@@ -49,7 +49,7 @@ export function getUserPointByUserId(id) {
   return async (dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.get(`http://localhost:3030/user_point/${id}`);
+      const result = await axios.get(`http://localhost:3000/user_point/${id}`);
       dispatch(successGetUserPointById(result.data));
     } catch (error) {
       console.log(error);
@@ -61,7 +61,7 @@ export function addUserPoint(id, point) {
   return async(dispatch) => {
     dispatch(fetchData());
     try {
-      const result = await axios.put(`http://localhost:3030/user_point/${id}`,{
+      const result = await axios.put(`http://localhost:3000/user_point/${id}`,{
         point: point
       })
       
