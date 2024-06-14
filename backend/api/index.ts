@@ -41,6 +41,8 @@ app.use("/user_point", userPointRoutes);
 app.use("/image", imageRoutes);
 app.use("/rating", ratingRoutes);
 
+
+app.get("/", (req,res)=>res.send("Express on vercel"))
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -54,3 +56,5 @@ db.once("open", () => {
 });
 
 app.listen(process.env.PORT);
+
+module.exports = app;
