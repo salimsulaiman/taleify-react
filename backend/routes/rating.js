@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Rating = require("../models/Rating");
+const Literation = require("../models/Literation");
 
 router.get("/", async (req, res) => {
   try {
@@ -45,12 +46,24 @@ router.post("/", async (req, res) => {
     literation,
     user,
   });
+
   try {
     const saveRating = await data.save();
+
+    // Retrieve all ratings for the given literation
+    const allRatings = await Rating.find({ literation });
+
+    // Calculate the average rating
+    const averageRating = allRatings.reduce((acc, curr) => acc + curr.rating, 0) / allRatings.length;
+
+    // Update the literation with the new average rating
+    await Literation.findByIdAndUpdate(literation, { rating: averageRating });
+
     res.json(saveRating);
   } catch (error) {
+    console.error(error);
     res.status(400).json({
-      message: "Failed to create story",
+      message: "Failed to create rating and update literation",
     });
   }
 });

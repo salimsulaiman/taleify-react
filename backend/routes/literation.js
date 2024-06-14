@@ -4,7 +4,7 @@ const router = express.Router();
 const Literation = require("../models/Literation");
 
 router.post("/", async (req, res) => {
-  const { title, picture, author, genre, rating, desc } = req.body;
+  const { title, picture, author, rating, desc } = req.body;
 
   function stringToSlug(str) {
     str = str.trim().toLowerCase();
